@@ -150,7 +150,17 @@ console.log("peerConnection", peerConnection);
   dataChannel.onopen = handleSendChannelStatusChange;
   dataChannel.onclose = handleSendChannelStatusChange;
 
-  peerConnection.createOffer();
+  peerConnection.createOffer().then(function(offer) {
+    var ret =  peerConnection.setLocalDescription(offer);
+    socket.emit('rtc offer', {
+      target: targetUsername,
+      sdp: peerConnection.localDescription
+    })
+    return ret;
+  })
+  .catch(function(reason) {
+    console.log(reason);
+  });
 }
 
 function onInvite(username) {
