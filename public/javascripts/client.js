@@ -59,12 +59,10 @@ console.log("*** WebRTC signaling state changed to: " + peerConnection.signaling
     })
     .then(function() {
     console.log("---> Sending offer to remote peer");
-      //sendToServer({
-      //  name: myUsername,
-      //  target: targetUsername,
-      //  type: "video-offer",
-      //  sdp: peerConnection.localDescription
-      //});
+      socket.emit('rtc offer', {
+        target: targetUsername,
+        sdp: peerConnection.localDescription
+      })
     })
     .catch(reportError);
   }
@@ -150,17 +148,6 @@ console.log("peerConnection", peerConnection);
   dataChannel.onopen = handleSendChannelStatusChange;
   dataChannel.onclose = handleSendChannelStatusChange;
 
-  peerConnection.createOffer().then(function(offer) {
-    var ret =  peerConnection.setLocalDescription(offer);
-    socket.emit('rtc offer', {
-      target: targetUsername,
-      sdp: peerConnection.localDescription
-    })
-    return ret;
-  })
-  .catch(function(reason) {
-    console.log(reason);
-  });
 }
 
 function onInvite(username) {
@@ -226,6 +213,11 @@ function onUserAdded(username) {
     console.log(msg.username, ': disconnected');
   })
 
+  socket.on('rtc offer', function (msg) {
+    if (msg.target === myUsername) {
+      console.log('recieved offer', msg.sdp);
+    }
+  })
 
 function reportError(errMessage) {
   log_error("Error " + errMessage.name + ": " + errMessage.message);
