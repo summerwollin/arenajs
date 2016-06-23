@@ -3,33 +3,6 @@ var myUsername = "";
 var targetUsername = "";
 
 var Peer = require('simple-peer')
-var p = new Peer({
-    initiator: location.hash === '#1',
-    trickle: false
-})
-
-p.on('error', function(err) {
-    console.log('error', err)
-})
-
-p.on('signal', function(data) {
-    console.log('SIGNAL', JSON.stringify(data))
-    document.querySelector('#outgoing').textContent = JSON.stringify(data)
-})
-
-document.querySelector('form').addEventListener('submit', function(ev) {
-    ev.preventDefault()
-    p.signal(JSON.parse(document.querySelector('#incoming').value))
-})
-
-p.on('connect', function() {
-    console.log('CONNECT')
-    p.send('whatever' + Math.random())
-})
-
-p.on('data', function(data) {
-    console.log('data: ' + data)
-})
 
 function onUserAdded(username) {
     if (myUsername !== username) {
@@ -41,11 +14,67 @@ function onUserAdded(username) {
     }
 }
 
-function onInvite(username) {
+var p = null;
 
+document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
+  ev.preventDefault();
+  if(p) {
+    p.send(JSON.stringify({
+      user: myUsername,
+      msg: document.querySelector("#incoming").value
+    }));
+  }
+})
+
+function initializePeer(isInitiator) {
+  p = new Peer({
+      initiator: isInitiator,
+      trickle: false
+  })
+
+  console.log("initializePeer: ", p);
+
+  p.on('error', function(err) {
+      console.log('error', err)
+  })
+
+  p.on('signal', function(data) {
+      console.log('SIGNAL', data)
+      if(isInitiator) {
+        socket.emit("offer", {
+          target: targetUsername,
+          host: myUsername,
+          sdp: data
+        })
+      } else {
+        socket.emit("answer", {
+          target: targetUsername,
+          peer: myUsername,
+          sdp: data
+        })
+      }
+  })
+
+  p.on('connect', function() {
+      console.log('CONNECT')
+  })
+
+  p.on('data', function(data) {
+      var msg = JSON.parse(new TextDecoder("utf-8").decode(data));
+      console.log('data: ', data)
+      $('#messages').append($('<li>').text(
+        "[" + msg.user + "(webrtc)]:" + msg.msg));
+  })
 }
 
-$('form').submit(function() {
+function onInvite(username) {
+  targetUsername = username;
+
+  initializePeer(true);
+}
+
+$('sendmsg-form').submit(function(ev) {
+  ev.preventDefault();
     socket.emit('chat message', $('#m').val());
     $('#m').val('');
     return false;
@@ -79,4 +108,17 @@ socket.on('user disconnected', function(msg) {
         onUserAdded(user);
     })
     console.log(msg.username, ': disconnected');
+});
+socket.on('offer', function(msg) {
+  console.log(msg);
+  if(msg.target === myUsername) {
+    targetUsername = msg.host;
+    initializePeer(false);
+    p.signal(msg.sdp);
+  }
+});
+socket.on('answer', function(msg) {
+  if(msg.target === myUsername) {
+    p.signal(msg.sdp);
+  }
 })
