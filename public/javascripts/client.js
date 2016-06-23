@@ -25,13 +25,12 @@ console.log("*** Stream removed");
 
 function handleICECandidateEvent(event) {
   if (event.candidate) {
-  console.log("Outgoing ICE candidate: " + event.candidate.candidate);
+    console.log("Outgoing ICE candidate: " + event.candidate.candidate);
 
-    //sendToServer({
-    //  type: "new-ice-candidate",
-    //  target: targetUsername,
-    //  candidate: event.candidate
-    //});
+    socket.emit("new ice candidate", {
+      target: targetUsername,
+      candidate: event.candidate
+    });
   }
 }
 
@@ -50,7 +49,7 @@ console.log("*** WebRTC signaling state changed to: " + peerConnection.signaling
 }
 
   function handleNegotiationNeededEvent() {
-  console.log("*** Negotiation needed");
+  console.log("*** reiation needed");
 
   console.log("---> Creating offer");
     peerConnection.createOffer().then(function(offer) {
@@ -61,33 +60,23 @@ console.log("*** WebRTC signaling state changed to: " + peerConnection.signaling
     console.log("---> Sending offer to remote peer");
       socket.emit('rtc offer', {
         target: targetUsername,
-        sdp: peerConnection.localDescription
+        sdp: peerConnection.localDescription,
+        name: myUsername
       })
     })
     .catch(reportError);
   }
 
 function handleSendChannelStatusChange(event) {
-console.log("handleSendChannelStatusChange", event);
-  // if (sendChannel) {
-  //   var state = sendChannel.readyState;
-  //
-  //   if (state === "open") {
-  //     messageInputBox.disabled = false;
-  //     messageInputBox.focus();
-  //     sendButton.disabled = false;
-  //     disconnectButton.disabled = false;
-  //     connectButton.disabled = true;
-  //   } else {
-  //     messageInputBox.disabled = true;
-  //     sendButton.disabled = true;
-  //     connectButton.disabled = false;
-  //     disconnectButton.disabled = true;
-  //   }
-  // }
+  console.log("handleSendChannelStatusChange", event);
+
+   if (dataChannel === null) {
+     dataChannel = event.currentTarget;
+     dataChannel.send("RTC message from " + myUsername);
+   }
 }
 
-function createPeerConnection() {
+function createPeerConnection(isInvite) {
   console.log("Setting up a connection...");
 
 // Create an RTCPeerConnection which knows to use our chosen
@@ -144,10 +133,15 @@ console.log("peerConnection", peerConnection);
   peerConnection.onsignalingstatechange = handleSignalingStateChangeEvent;
   peerConnection.onnegotiationneeded = handleNegotiationNeededEvent;
 
+if(isInvite) {
   dataChannel = peerConnection.createDataChannel('sendChannel');
   dataChannel.onopen = handleSendChannelStatusChange;
   dataChannel.onclose = handleSendChannelStatusChange;
-
+  dataChannel.onmessage = function(event) {
+      console.log('got rtc message', event);
+      $('#messages').append($('<li>').text(event.data));
+  };
+}
 }
 
 function onInvite(username) {
@@ -163,7 +157,7 @@ function onInvite(username) {
       // Call createPeerConnection() to create the RTCPeerConnection.
 
       console.log("Setting up connection to invite user: " + targetUsername);
-      createPeerConnection();
+      createPeerConnection(true);
     }
 }
 
@@ -216,8 +210,53 @@ function onUserAdded(username) {
   socket.on('rtc offer', function (msg) {
     if (msg.target === myUsername) {
       console.log('recieved offer', msg.sdp);
+      handleRtcOfferMsg(msg);
     }
   })
+
+  socket.on('rtc answer', function(msg) {
+    //if(msg.target === myUsername && msg.name === targetUsername) {
+      console.log('recieved answer', msg.sdp);
+      var desc = new RTCSessionDescription(msg.sdp);
+      peerConnection.setRemoteDescription(desc).then(function() {
+        console.log("RTC Connection Up!!!!");
+      })
+    //}
+  })
+
+  socket.on('new ice candidate', function(msg) {
+    var candidate = new RTCIceCandidate(msg.candidate);
+
+    peerConnection.addIceCandidate(candidate)
+    .catch(function(error) {
+      console.error('on addIceCandidate');
+      reportError(error);
+    });
+  });
+
+function handleRtcOfferMsg(msg) {
+  targetUsername = msg.name;
+  console.log("Starting to accept invitation from " + targetUsername);
+
+  createPeerConnection(false);
+
+  var desc = new RTCSessionDescription(msg.sdp);
+
+  peerConnection.setRemoteDescription(desc).then(function () {
+    console.log('setRemoteDescription', desc);
+    return peerConnection.createAnswer();
+  }).then(function(answer) {
+    console.log('createAnswer', answer);
+    return peerConnection.setLocalDescription(answer);
+  }).then(function() {
+    console.log('setLocalDescription', peerConnection.localDescription);
+    socket.emit('rtc answer', {
+      name: myUsername,
+      target: targetUsername,
+      sdp: peerConnection.localDescription
+    });
+  });
+}
 
 function reportError(errMessage) {
   log_error("Error " + errMessage.name + ": " + errMessage.message);
