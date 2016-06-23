@@ -28,6 +28,3 @@ node_modules
 
 # Debug log from npm
 npm-debug.log
-
-# Browserify generated file
-public/javascripts/bundle.js
