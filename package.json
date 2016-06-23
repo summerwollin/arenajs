@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "build": "npm run build-js",
+    "build-js": "browserify public/javascripts/client.js -o public/javascripts/bundle.js -dv",
+    "watch-js": "watchify public/javascripts/client.js -o public/javascripts/bundle.js -dv"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -14,6 +17,8 @@
     "jsonwebtoken": "^7.0.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "socket.io": "^1.4.6"
+    "simple-peer": "^6.0.4",
+    "socket.io": "^1.4.6",
+    "watchify": "^3.7.0"
   }
 }

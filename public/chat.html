@@ -14,8 +14,6 @@
   </style>
   <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
   <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-  <script type="text/javascript" src="/javascripts/adapter.js"></script>
-  <script type="text/javascript" src="/javascripts/client.js"></script>
 <body>
   <h1 id="h1-username"></h1>
   <ul id="messages"></ul>
@@ -24,6 +22,17 @@
   </form>
   <h1>Chat!</h1>
   <ul id="ul-users"></ul>
-
+  <style>
+    #outgoing {
+      width: 600px;
+      word-wrap: break-word;
+    }
+  </style>
+  <form>
+    <textarea id="incoming"></textarea>
+    <button type="submit">submit</button>
+  </form>
+  <pre id="outgoing"></pre>
+  <script type="text/javascript" src="/javascripts/bundle.js"></script>
 </body>
 </html>
