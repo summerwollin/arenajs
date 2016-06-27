@@ -2,15 +2,15 @@
   'use strict';
 
   angular.module('arenaApp')
-    .directive('ajChat', chatDirective);
+    .directive('ajLogin', loginDirective);
 
 
-  function chatDirective () {
+  function loginDirective () {
     return {
       scope: {
         filters: '='
       },
-      templateUrl: 'app/chat/chat.directive.html',
+      templateUrl: 'app/login/login.directive.html',
       controller: controller,
       controllerAs: 'vm'
     }
