@@ -10,7 +10,7 @@
       scope: {
         filters: '='
       },
-      templateUrl: '/app/main.directive.html',
+      templateUrl: 'app/main/main.directive.html',
       controller: controller,
       controllerAs: 'vm'
     }
