@@ -14,7 +14,7 @@
     '$httpProvider'
   ];
 
-  function setupRoutes($routeProvider, $locationProvider, $httpProvider, env){
+  function setupRoutes($routeProvider, $locationProvider, $httpProvider){
 
     $routeProvider
     .when('/', {

@@ -22,29 +22,29 @@ function onUserAdded(username) {
 
 var p = null;
 
-document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
-  ev.preventDefault();
-  if(p) {
-    p.send(JSON.stringify({
-      user: myUsername,
-      msg: document.querySelector("#incoming").value
-    }));
-  }
-})
+// document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
+//   ev.preventDefault();
+//   if(p) {
+//     window.p.send(JSON.stringify({
+//       user: myUsername,
+//       msg: document.querySelector("#incoming").value
+//     }));
+//   }
+// })
 
 function initializePeer(isInitiator) {
-  p = new Peer({
+  window.p = new Peer({
       initiator: isInitiator,
       trickle: false
   })
 
   console.log("initializePeer: ", p);
 
-  p.on('error', function(err) {
+  window.p.on('error', function(err) {
       console.log('error', err)
   })
 
-  p.on('signal', function(data) {
+  window.p.on('signal', function(data) {
       console.log('SIGNAL', data)
       if(isInitiator) {
         socket.emit("offer", {
@@ -61,11 +61,11 @@ function initializePeer(isInitiator) {
       }
   })
 
-  p.on('connect', function() {
+  window.p.on('connect', function() {
       console.log('CONNECT')
   })
 
-  p.on('data', function(data) {
+  window.p.on('data', function(data) {
       var msg = JSON.parse(new TextDecoder("utf-8").decode(data));
       console.log('data: ', data)
       $('#messages').append($('<li>').text(

@@ -1,7 +1,7 @@
 <h1 id="h1-username"></h1>
 <ul id="messages"></ul>
-<form id="sendmsg-form" action="">
-  <input id="m" autocomplete="off" /><button>Send</button>
+<form name="sendmsgForm" novalidate ng-submit="sendmsgForm.$valid && vm.sendmsg()">
+  <input ng-model="vm.form.sendmsg.msg" autocomplete="off" /><button type="submit">Send</button>
 </form>
 <h1>Chat!</h1>
 <ul id="ul-users"></ul>

@@ -34,3 +34,16 @@ body {
 .main-side p {
   padding: 30px;
 }
+.lobby {
+  height: 100%;
+  border-right: 3px solid black;
+  text-align: center;
+}
+.lobby-join {
+  background-color: #5c0e0a;
+  border-radius: 10px;
+  margin-left: 200px;
+  margin-right: 200px;
+  padding: 10px;
+  color: white;
+}
