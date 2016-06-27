@@ -1,8 +1,36 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+
+.main {
+  height: 100%;
+  border-right: 3px solid black;
+  padding: 0;
+}
 .main-imagearea {
   background-image: url("/images/arenamain.jpg");
   width: 100%;
-  height: 300px;
+  height: 550px;
+  margin-top: -20px;
+  color: white;
+  text-align: center;
+}
+.main-imagearea h1 {
+  padding-top: 30px;
+}
+.main-desctext {
+  text-align: center;
+  padding: 20px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+.main-side {
+  text-align: center;
+  padding-top: 30px;
+}
+.main-side h3 {
+  padding-top: 80px;
+}
+.main-side p {
+  padding: 30px;
 }
