@@ -8,7 +8,7 @@
   function chatDirective () {
     return {
       scope: {
-        myUsername: '='
+        filters: '='
       },
       templateUrl: 'app/chat/chat.directive.html',
       controller: controller,
@@ -16,13 +16,14 @@
     }
   }
 
-  controller.$inject = ['$http', '$scope', '$window'];
+  controller.$inject = ['$http', '$scope', '$window', 'sessionService'];
 
-  function controller($http, $scope, $watch, $window) {
+  function controller($http, $scope, $window, sessionService) {
     let vm = this;
     vm.sendmsg = sendmsg;
-    // vm.myUsername = window.myUsername;
-    console.log('chat-dir-username: ', window.myUsername);
+    console.log('sessionService: ', sessionService);
+    vm.myUsername = sessionService.myUsername;
+    // vm.users = sessionService.users;
 
     function sendmsg() {
       if(p) {
@@ -39,14 +40,14 @@
     //     vm.username = newValue;
     //   }
     // })
-    // $scope.$watch(function(){
-    //   console.log('watching');
-    //   return window.myUsername;
-    // }, function(value){
-    //   console.log('watching2', value);
-    //
-    //   vm.username = value;
-    // }, true)
+    $scope.$watch(function(){
+      console.log('watching');
+      return sessionService.myUsername;
+    }, function(value){
+      console.log('watching2', value);
+
+      vm.myUsername = value;
+    }, true)
 
   //   document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
   //     ev.preventDefault();

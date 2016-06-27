@@ -2,23 +2,19 @@
   'use strict';
 
   var dependencies = [
-    'ngRoute'
+    'ngRoute',
   ];
 
   angular.module('arenaApp', dependencies)
   .config(setupRoutes)
-  .controller('MainController', function ($scope) {
-    var socket = io();
-    var myUsername = "";
-    var targetUsername = "";
+  .controller('MainController', function ($scope, sessionService, $location) {
+    var vm = this;
+    vm.session = sessionService;
 
+    var socket = io();
+    var targetUsername = "";
     var Peer = SimplePeer;
 
-    //$apply
-    //$scope.$on('destroy')
-    //move code into controller
-    //ng-submit = funcname
-    //angular.run -> $root
 
     function onUserAdded(username) {
         // if (myUsername !== username) {
@@ -102,9 +98,8 @@
     socket.on('auth-ok', function(msg) {
         console.log('got auth ok msg', msg);
         // $('#h1-username').text("User: " + msg.username);
-        myUsername = msg.username;
-        window.myUsername = msg.username;
-        console.log('window-user: ', window.myUsername);
+        vm.session.myUsername = msg.username;
+        console.log('window-user: ', vm.session.myUsername);
         $scope.$apply();
         console.log('after apply!!!');
     });
@@ -159,7 +154,7 @@
       template: '<aj-main></aj-main>',
     })
     .when('/lobby', {
-      template: '<aj-lobby myUsername="window.myUsername"></aj-lobby>'
+      template: '<aj-lobby></aj-lobby>'
     });
 
     $locationProvider.html5Mode(true);

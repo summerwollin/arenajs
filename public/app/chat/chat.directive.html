@@ -1,5 +1,8 @@
-<h1 id="h1-username">{{myUsername}}</h1>
+<h1 id="h1-username">{{vm.myUsername}}</h1>
 <ul id="messages"></ul>
+<!-- <ul ng-repeat="user in vm.users track by $index">
+  <li>{{user}}</li>
+</ul> -->
 <form name="sendmsgForm" novalidate ng-submit="sendmsgForm.$valid && vm.sendmsg()">
   <input ng-model="vm.form.sendmsg.msg" autocomplete="off" /><button type="submit">Send</button>
 </form>

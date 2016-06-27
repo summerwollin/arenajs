@@ -19,6 +19,7 @@
   controller.$inject = ['$http', '$window', '$location'];
 
   function controller($http, $window, $location) {
+    var socket = io();
     let vm = this;
     vm.login = login;
 
@@ -26,6 +27,7 @@
       return $http.post('http://localhost:3000/login', {username: vm.form.login.username})
       .then(function (response) {
         $window.localStorage.setItem('token', response.data.token);
+        socket.emit('auth', localStorage.getItem('token'));
         $location.path('/lobby');
       })
     }

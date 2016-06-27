@@ -4,6 +4,6 @@
       <label for="username">Username:</label>
       <input ng-model="vm.form.login.username" type="text" name="username" class="username-input" value="">
     </div>
-    <button class="btn btn-default" type="submit" id="submit-username">Login</button>
+    <button ng-click="vm.loginSubmit()" class="btn btn-default" type="submit" id="submit-username">Login</button>
   </form>
 </div>
