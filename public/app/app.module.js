@@ -20,6 +20,9 @@
     .when('/', {
       template: '<aj-main></aj-main>',
     })
+    .when('/lobby', {
+      template: '<aj-lobby></aj-lobby>'
+    });
 
     $locationProvider.html5Mode(true);
   };

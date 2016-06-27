@@ -4,6 +4,12 @@ var targetUsername = "";
 
 var Peer = require('simple-peer')
 
+//$apply
+//$scope.$on('destroy')
+//move code into controller
+//ng-submit = funcname
+//angular.run -> $root
+
 function onUserAdded(username) {
     if (myUsername !== username) {
         $('#ul-users').append(

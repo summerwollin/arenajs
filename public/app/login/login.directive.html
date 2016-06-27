@@ -1,7 +1,9 @@
 <div>
-  <div class="form-group">
-    <label for="username">Username:</label>
-    <input type="text" name="username" class="username-input" value="">
-  </div>
-  <button class="btn btn-default" type="button" name="button" id="submit-username">Login</button>
+  <form name="loginForm" novalidate ng-submit="loginForm.$valid && vm.login()">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input ng-model="vm.form.login.username" type="text" name="username" class="username-input" value="">
+    </div>
+    <button class="btn btn-default" type="submit" id="submit-username">Login</button>
+  </form>
 </div>
