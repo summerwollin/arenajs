@@ -23,11 +23,9 @@
     vm.login = login;
 
     function login() {
-      console.log(vm.form.login.username);
       return $http.post('http://localhost:3000/login', {username: vm.form.login.username})
       .then(function (response) {
-        console.log('res: ', response);
-        $window.localStorage.setItem('token', response.token);
+        $window.localStorage.setItem('token', response.data.token);
         $location.path('/lobby');
       })
     }

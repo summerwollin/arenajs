@@ -12,6 +12,7 @@ router.post('/login', function(req, res, next) {
   usernames.push(req.body.username);
   console.log('all names: ', usernames);
   var token = jwt.sign(req.body.username, 'shhhhhhhhh');
+  console.log('mytoken: ', token);
   res.json({
     success: true,
     message: 'Enjoy your token!',
