@@ -286,7 +286,7 @@
             //  Space restarts the game.
             //scoreCounter(game.score);
 
-            score = localStorage.getItem("score");
+            //score = localStorage.getItem("score");
             game.lives = 3;
             game.score = 0;
             game.level = 1;
