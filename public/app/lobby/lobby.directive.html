@@ -1,12 +1,16 @@
 <div class="row">
-  <div class="lobby col-md-8">
-    <!-- <h1>Lobby</h1>
+  <div ng-show="!vm.hostGame" class="lobby col-md-8">
+    <h1>Lobby</h1>
     <h3>Current Games:</h3>
     <h3 class="lobby-join">Join game - player1 vs player2</h3>
     <h3 class="lobby-join">Join game - player1 vs player2</h3>
     <h3 class="lobby-join">Join game - player1 vs player2</h3>
-    <h3 class="lobby-join">Join game - player1 vs player2</h3>
-    <h3 class="lobby-join">Join game - player1 vs player2</h3> -->
+    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Host Game</button>
+  </div>
+  <div  ng-show="vm.hostGame" class="lobby col-md-8">
+    <h1>Game Options</h1>
+    <a href="game"><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
+    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Cancel</button>
   </div>
 
   <div class="col-md-4 lobby-side">

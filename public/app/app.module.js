@@ -161,6 +161,9 @@
     })
     .when('/lobby', {
       template: '<aj-lobby></aj-lobby>'
+    })
+    .when('/game', {
+      template: '<aj-game></aj-game>'
     });
 
     $locationProvider.html5Mode(true);

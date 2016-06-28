@@ -2,15 +2,15 @@
   'use strict';
 
   angular.module('arenaApp')
-    .directive('ajLobby', lobbyDirective);
+    .directive('ajGame', gameDirective);
 
 
-  function lobbyDirective () {
+  function gameDirective () {
     return {
       scope: {
         filters: '='
       },
-      templateUrl: 'app/lobby/lobby.directive.html',
+      templateUrl: 'app/game/game.directive.html',
       controller: controller,
       controllerAs: 'vm'
     }
