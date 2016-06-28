@@ -50,3 +50,6 @@ body {
 .btn-primary {
   margin-top: 100px;
 }
+#gameCanvas {
+  background-color: #232E37;
+}

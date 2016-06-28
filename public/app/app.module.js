@@ -8,6 +8,13 @@
   angular.module('arenaApp', dependencies)
   .config(setupRoutes)
   .controller('MainController', function ($scope, sessionService, $location) {
+
+    $scope.canvasWidth = 400;
+    $scope.canvasHeight = 400;
+    $scope.dofillcontainer = true;
+    $scope.scale = 1;
+    $scope.materialType = 'lambert';
+
     var vm = this;
     vm.session = sessionService;
     vm.session.users = [];
