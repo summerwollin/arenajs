@@ -170,7 +170,10 @@
       template: '<aj-lobby></aj-lobby>'
     })
     .when('/game', {
-      template: '<aj-game></aj-game>'
+      template: '<aj-invaders></aj-invaders>'
+    })
+    .when('/webgl', {
+      template: '<aj-webgl></aj-webgl>'
     });
 
     $locationProvider.html5Mode(true);
