@@ -24,7 +24,7 @@
     vm.login = login;
 
     function login() {
-      return $http.post('http://localhost:3000/login', {username: vm.form.login.username})
+      return $http.post('https://arenajs.herokuapp.com/', {username: vm.form.login.username})
       .then(function (response) {
         $window.localStorage.setItem('token', response.data.token);
         socket.emit('auth', localStorage.getItem('token'));
