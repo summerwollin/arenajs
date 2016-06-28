@@ -1,12 +1,37 @@
-<div class="row">
-  <div class="lobby col-md-8">
-    <h1>Game</h1>
-    <div id="gamecontainer">
-      <canvas id="gameCanvas"></canvas>
-    </div>
-  </div>
+<h1>Webgl</h1>
+<div class="twelve columns add-bottom">
 
-  <div class="col-md-4 lobby-side">
-    <!-- <aj-chat></aj-chat> -->
-  </div>
-</div>
+       <div
+         id="webglContainer"
+         ng-webgl
+         width="canvasWidth"
+         height="canvasHeight"
+         fillcontainer="dofillcontainer"
+         scale="scale"
+         material-type="materialType"
+       ></div>
+
+     </div>
+
+     <div class="four columns add-bottom">
+
+       <label for="scale">Scale Object</label>
+       <input type="range" name="scale" min="0.1" max="1.2" step="0.1" ng-model="scale" class="add-bottom">
+
+       <label for="canvasWidth">Canvas Width</label>
+       <input type="text" id="canvasWidth" ng-model="canvasWidth" ng-disabled="dofillcontainer">
+
+       <label for="canvasHeight">Canvas Height</label>
+       <input type="text" id="canvasHeight" ng-model="canvasHeight" ng-disabled="dofillcontainer">
+
+       <label for="materialsList">Material Type</label>
+         <select id="materialsList" ng-model="materialType">
+           <option value="lambert">Lambert</option>
+           <option value="phong">Phong</option>
+           <option value="wireframe">Wire Frame</option>
+         </select>
+
+       <label for="dofillcontainer">
+         <input type="checkbox" id="dofillcontainer" ng-model="dofillcontainer"/>
+         <span>Responsive Canvas</span>
+       </label>
