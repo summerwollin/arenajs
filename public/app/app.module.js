@@ -10,6 +10,7 @@
   .controller('MainController', function ($scope, sessionService, $location) {
     var vm = this;
     vm.session = sessionService;
+    vm.session.users = [];
 
     var socket = io();
     var targetUsername = "";
@@ -17,16 +18,23 @@
 
 
     function onUserAdded(username) {
-        // if (myUsername !== username) {
-        //     $('#ul-users').append(
-        //         $('<li>').text(username)
-        //         .on('click', function() {
-        //             onInvite(username);
-        //         }));
-        // }
+        if (vm.session.myUsername !== username) {
+          if (!vm.session.users.includes(username)) {
+            vm.session.users.push(username);
+            $scope.$apply();
+            console.log('trying to add user', username, vm.session.users);
+          } else {
+            console.log('vm.session.users already had', username, vm.session.users);
+          }
+            // $('#ul-users').append(
+            //     $('<li>').text(username)
+            //     .on('click', function() {
+            //         onInvite(username);
+            //     }));
+        }
     }
-
-    var p = null;
+    //
+    // var p = null;
 
     // document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
     //   ev.preventDefault();
@@ -38,7 +46,7 @@
     //   }
     // })
 
-    function initializePeer(isInitiator) {
+    //function initializePeer(isInitiator) {
       // window.p = new Peer({
       //     initiator: isInitiator,
       //     trickle: false
@@ -77,13 +85,13 @@
       //     $('#messages').append($('<li>').text(
       //       "[" + msg.user + "(webrtc)]:" + msg.msg));
       // })
-    }
+    //}
 
-    function onInvite(username) {
+    //function onInvite(username) {
       // targetUsername = username;
       //
       // initializePeer(true);
-    }
+    //}
 
     // $('sendmsg-form').submit(function(ev) {
     //   ev.preventDefault();
@@ -99,14 +107,12 @@
         console.log('got auth ok msg', msg);
         // $('#h1-username').text("User: " + msg.username);
         vm.session.myUsername = msg.username;
-        console.log('window-user: ', vm.session.myUsername);
         $scope.$apply();
-        console.log('after apply!!!');
     });
-    socket.on('chat message', function(msg) {
-        console.log('got chat message msg', msg);
-        // $('#messages').append($('<li>').text(msg));
-    });
+    // socket.on('chat message', function(msg) {
+    //     console.log('got chat message msg', msg);
+    //     // $('#messages').append($('<li>').text(msg));
+    // });
     socket.on('currentUsers', function(msg) {
         console.log('got curentUsers msg', msg);
         msg.forEach(function(user) {
@@ -125,19 +131,19 @@
         })
         console.log(msg.username, ': disconnected');
     });
-    socket.on('offer', function(msg) {
-      console.log(msg);
-      if(msg.target === myUsername) {
-        targetUsername = msg.host;
-        initializePeer(false);
-        window.p.signal(msg.sdp);
-      }
-    });
-    socket.on('answer', function(msg) {
-      if(msg.target === myUsername) {
-        window.p.signal(msg.sdp);
-      }
-    })
+    // socket.on('offer', function(msg) {
+    //   console.log(msg);
+    //   if(msg.target === vm.session.myUsername) {
+    //     targetUsername = msg.host;
+    //     initializePeer(false);
+    //     p.signal(msg.sdp);
+    //   }
+    // });
+    // socket.on('answer', function(msg) {
+    //   if(msg.target === vm.session.myUsername) {
+    //     p.signal(msg.sdp);
+    //   }
+    // })
 
   })
 

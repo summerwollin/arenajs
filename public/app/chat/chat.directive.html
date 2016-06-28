@@ -1,12 +1,15 @@
 <h1 id="h1-username">{{vm.myUsername}}</h1>
 <ul id="messages"></ul>
-<!-- <ul ng-repeat="user in vm.users track by $index">
-  <li>{{user}}</li>
-</ul> -->
+<ul ng-repeat="user in vm.users track by $index">
+  <li ng-click="vm.userClicked(user)">{{user}}</li>
+</ul>
 <form name="sendmsgForm" novalidate ng-submit="sendmsgForm.$valid && vm.sendmsg()">
   <input ng-model="vm.form.sendmsg.msg" autocomplete="off" /><button type="submit">Send</button>
 </form>
 <h1>Chat!</h1>
+<ul ng-repeat="msg in vm.messages">
+  <li>{{msg}}</li>
+</ul>
 <ul id="ul-users"></ul>
 <form id="simple-peer-form">
   <textarea id="incoming"></textarea>
