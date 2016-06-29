@@ -16,7 +16,6 @@
     var socket = null;
     var state = STATE_UNCONNECTED;
     var stateChangeHandlers = [];
-    var hostedGames = [];
     var myUsername = "";
 
     return {
@@ -29,7 +28,6 @@
       setToken,
       startAuthorization,
       newGameHost,
-      hostedGames,
       getHostedGames
    };
 
@@ -89,17 +87,10 @@
 
         socket.on('on-new-host', function(msg) {
           getHostedGames();
-          //hostedGames.push(msg); //vs getHostedGames()
-          console.log('socketService [on-new-host]', hostedGames);
-
+          console.log('socketService [on-new-host]', msg);
         })
 
-        //getHostedGames();
-        // socket.emit('get-hosted-games');
-        // socket.on('send-hosted-games', function (msg) {
-        //   hostedGames = msg;
-        //   console.log('startAuth on-send-HG: ', hostedGames);
-        // })
+        getHostedGames();
       });
 
       return promise;
@@ -113,11 +104,8 @@
     function getHostedGames() {
       socket.emit('get-hosted-games');
       socket.on('send-hosted-games', function (msg) {
-        hostedGames = msg;
-        $rootScope.$broadcast('sending-hostedGames', hostedGames);
+        $rootScope.$broadcast('sending-hostedGames', msg);
         console.log('socketFactory [send-hosted-games]: ', msg);
-        console.log('socketFactory [send-hosted-games]: ', hostedGames);
-        //return hostedGames;
       })
     }
 

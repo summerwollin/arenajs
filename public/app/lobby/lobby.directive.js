@@ -34,14 +34,6 @@
       console.log('vm.hostedGames', vm.hostedGames);
       $scope.$apply();
     })
-    // $scope.$watch(function(){
-    //   console.log('getting watch hostedGames', socketService.hostedGames);
-    //   return socketService.hostedGames;
-    // }, function(value){
-    //   console.log('watching hostedGames', value);
-    //
-    //   vm.hostedGames = value;
-    // }, true)
 
   }
 
