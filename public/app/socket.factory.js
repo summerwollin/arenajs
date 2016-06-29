@@ -88,10 +88,12 @@
         });
 
         socket.on('on-new-host', function(msg) {
-          hostedGames.push(msg);
+          hostedGames.push(msg); //vs getHostedGames()
           console.log('socketService [on-new-host]', hostedGames);
           $rootScope.$apply();
         })
+
+        getHostedGames();
         // socket.emit('get-hosted-games');
         // socket.on('send-hosted-games', function (msg) {
         //   hostedGames = msg;
@@ -108,14 +110,13 @@
     }
 
     function getHostedGames() {
-      // socket.emit('get-hosted-games');
-      // socket.on('send-hosted-games', function (msg) {
-      //   hostedGames = msg;
-      //   console.log('SF on-send-HG: ', hostedGames);
-      //   return hostedGames;
-      // })
+      socket.emit('get-hosted-games');
+      socket.on('send-hosted-games', function (msg) {
+        //hostedGames.push(msg);
+        console.log('socketFactory [send-hosted-games]: ', msg);
+        //return hostedGames;
+      })
     }
-
 
 
     ////////////////////////////////////////////////
