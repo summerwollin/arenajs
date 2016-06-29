@@ -5,9 +5,9 @@
     .factory('socketService', factory);
 
 
-  factory.$inject = [];
+  factory.$inject = ['sessionService', '$rootScope'];
 
-  function factory () {
+  function factory (sessionService, $rootScope) {
 
     const STATE_UNCONNECTED = 'STATE_UNCONNECTED';
     const STATE_CONNECTING = 'STATE_CONNECTING';
@@ -16,6 +16,8 @@
     var socket = null;
     var state = STATE_UNCONNECTED;
     var stateChangeHandlers = [];
+    var hostedGames = [];
+    var myUsername = "";
 
     return {
       STATE_UNCONNECTED,
@@ -25,8 +27,11 @@
       onStateChange,
       removeStateChangeHandler,
       setToken,
-      startAuthorization
-    };
+      startAuthorization,
+      newGameHost,
+      hostedGames,
+      getHostedGames
+   };
 
     ////////////////////////////////////////////////
     // exported functions
@@ -74,16 +79,44 @@
 
         socket.on('auth-ok', function(msg) {
             console.log('socketService:[auth-ok]', msg);
+            myUsername = msg.username;
             changeState(STATE_CONNECTED);
             resolve('resolve auth-ok');
             // $('#h1-username').text("User: " + msg.username);
             //vm.session.myUsername = msg.username;
             //$scope.$apply();
         });
+
+        socket.on('on-new-host', function(msg) {
+          hostedGames.push(msg);
+          console.log('socketService [on-new-host]', hostedGames);
+          $rootScope.$apply();
+        })
+        // socket.emit('get-hosted-games');
+        // socket.on('send-hosted-games', function (msg) {
+        //   hostedGames = msg;
+        //   console.log('startAuth on-send-HG: ', hostedGames);
+        // })
       });
 
       return promise;
     }
+
+    function newGameHost(options) {
+      console.log('socketService [new-host]', myUsername);
+      socket.emit('new-host', {gameOptions: options, hostUser: myUsername});
+    }
+
+    function getHostedGames() {
+      // socket.emit('get-hosted-games');
+      // socket.on('send-hosted-games', function (msg) {
+      //   hostedGames = msg;
+      //   console.log('SF on-send-HG: ', hostedGames);
+      //   return hostedGames;
+      // })
+    }
+
+
 
     ////////////////////////////////////////////////
     // private functions

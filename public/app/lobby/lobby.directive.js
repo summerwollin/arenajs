@@ -16,11 +16,26 @@
     }
   }
 
-  controller.$inject = [];
+  controller.$inject = ['socketService', '$scope'];
 
-  function controller() {
+  function controller(socketService, $scope) {
     var vm = this;
+    vm.startHosting = startHosting;
+    vm.hostedGames = socketService.hostedGames;
 
+    function startHosting(gameOption) {
+      console.log('start hosting: ', gameOption);
+      socketService.newGameHost(gameOption);
+    }
+
+    $scope.$watch(function(){
+      console.log('getting watch hostedGames', socketService.hostedGames);
+      return socketService.hostedGames;
+    }, function(value){
+      console.log('watching hostedGames', value);
+
+      vm.hostedGames = value;
+    }, true)
 
   }
 

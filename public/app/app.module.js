@@ -182,7 +182,7 @@
     .when('/lobby', {
       template: '<aj-lobby></aj-lobby>'
     })
-    .when('/game', {
+    .when('/invaders', {
       template: '<aj-invaders></aj-invaders>'
     })
     .when('/webgl', {
