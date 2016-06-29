@@ -90,7 +90,7 @@
           console.log('socketService [on-new-host]', msg);
         })
 
-        getHostedGames();
+        //getHostedGames();
       });
 
       return promise;

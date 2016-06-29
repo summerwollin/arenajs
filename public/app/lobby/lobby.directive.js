@@ -29,6 +29,7 @@
     }
 
     $scope.$on('sending-hostedGames', function (event, data) {
+      console.log('!!!!!!scope on!!!!!!!!');
       console.log('on result data: ', data);
       vm.hostedGames = data;
       console.log('vm.hostedGames', vm.hostedGames);
