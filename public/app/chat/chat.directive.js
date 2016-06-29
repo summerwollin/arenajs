@@ -16,11 +16,10 @@
     }
   }
 
-  controller.$inject = ['$http', '$scope', '$window', 'sessionService', 'chatService'];
+  controller.$inject = ['$http', '$scope', '$window', 'sessionService', 'socketService'];
 
-  function controller($http, $scope, $window, sessionService, chatService) {
+  function controller($http, $scope, $window, sessionService, socketService) {
     let vm = this;
-    var socket = io();
     vm.sendmsg = sendmsg;
     vm.userClicked = userClicked;
     vm.messages = [];
@@ -31,6 +30,10 @@
     var Peer = SimplePeer;
     var myUsername = sessionService.myUsername;
     var p = null;
+
+    socketService.onStateChange(function (newState) {
+      console.log('socket state changed: ', newState);
+    })
 
     function sendmsg() {
       if(p) {
@@ -75,23 +78,17 @@
           console.log('SIGNAL', data)
           if(isInitiator) {
             console.log("sending offer target: ", vm.targetUsername);
-            socket.emit("offer", {
-              target: vm.targetUsername,
-              host: vm.myUsername,
-              sdp: data
-            })
           } else {
             console.log("sending answer", data);
-            socket.emit("answer", {
-              target: vm.targetUsername,
-              peer: vm.myUsername,
-              sdp: data
-            })
           }
       })
 
       p.on('connect', function() {
           console.log('CONNECT')
+      })
+
+      p.on('close', function () {
+        console.log('CONNECTION CLOSED');
       })
 
       p.on('data', function(data) {
@@ -108,32 +105,6 @@
       console.log('onInvite triggered for target: ', vm.targetUsername);
       initializePeer(true);
     }
-
-    socket.on('chat message', function(msg) {
-        console.log('got chat message msg', msg);
-        vm.messages.push("[" + msg.user + "(webrtc)]:" + msg.msg)
-    });
-
-    socket.on('offer', function(msg) {
-      console.log('received offer', msg);
-      if(msg.target === vm.myUsername) {
-        console.log('target same as myUsername');
-        vm.targetUsername = msg.host;
-        initializePeer(false);
-        p.signal(msg.sdp);
-      }
-    });
-    socket.on('answer', function(msg) {
-      console.log('received answer', msg);
-      console.log(msg.peer);
-      console.log('target: ', msg.target);
-      if(msg.target === vm.myUsername) {
-        console.log('I am the target: ', msg.target);
-        p.signal(msg.sdp);
-      }
-    });
-
-
 
     $scope.$watch(function(){
       console.log('getting watch myUsername');

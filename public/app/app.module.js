@@ -19,7 +19,7 @@
     vm.session = sessionService;
     vm.session.users = [];
 
-    var socket = io();
+    //var socket = io();
     var targetUsername = "";
     var Peer = SimplePeer;
 
@@ -106,38 +106,38 @@
     //     $('#m').val('');
     //     return false;
     // });
-    socket.on('connect', function() {
-        console.log('on-connect - client.js');
-        socket.emit('auth', localStorage.getItem('token'));
-    });
-    socket.on('auth-ok', function(msg) {
-        console.log('got auth ok msg', msg);
-        // $('#h1-username').text("User: " + msg.username);
-        vm.session.myUsername = msg.username;
-        $scope.$apply();
-    });
+    // socket.on('connect', function() {
+    //     console.log('on-connect - client.js');
+    //     socket.emit('auth', localStorage.getItem('token'));
+    // });
+    // socket.on('auth-ok', function(msg) {
+    //     console.log('got auth ok msg', msg);
+    //     // $('#h1-username').text("User: " + msg.username);
+    //     vm.session.myUsername = msg.username;
+    //     $scope.$apply();
+    // });
     // socket.on('chat message', function(msg) {
     //     console.log('got chat message msg', msg);
     //     // $('#messages').append($('<li>').text(msg));
     // });
-    socket.on('currentUsers', function(msg) {
-        console.log('got curentUsers msg', msg);
-        msg.forEach(function(user) {
-            onUserAdded(user);
-        });
-    });
-    socket.on('user added', function(user) {
-        console.log('got user added msg', user);
-        onUserAdded(user);
-    });
-    socket.on('user disconnected', function(msg) {
-        console.log('got user disconnected msg', msg);
-        // $('#ul-users').empty();
-        msg.users.forEach(function(user) {
-            onUserAdded(user);
-        })
-        console.log(msg.username, ': disconnected');
-    });
+    // socket.on('currentUsers', function(msg) {
+    //     console.log('got curentUsers msg', msg);
+    //     msg.forEach(function(user) {
+    //         onUserAdded(user);
+    //     });
+    // });
+    // socket.on('user added', function(user) {
+    //     console.log('got user added msg', user);
+    //     onUserAdded(user);
+    // });
+    // socket.on('user disconnected', function(msg) {
+    //     console.log('got user disconnected msg', msg);
+    //     // $('#ul-users').empty();
+    //     msg.users.forEach(function(user) {
+    //         onUserAdded(user);
+    //     })
+    //     console.log(msg.username, ': disconnected');
+    // });
     // socket.on('offer', function(msg) {
     //   console.log(msg);
     //   if(msg.target === vm.session.myUsername) {
@@ -151,8 +151,7 @@
     //     p.signal(msg.sdp);
     //   }
     // })
-
-  })
+  });
 
   setupRoutes.$inject = [
     '$routeProvider',

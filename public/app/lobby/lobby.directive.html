@@ -9,7 +9,11 @@
   </div>
   <div  ng-show="vm.hostGame" class="lobby col-md-8">
     <h1>Game Options</h1>
-    <a href="game"><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
+    <select ng-model="hostGame">
+      <option value="game">Space Invaders</option>
+      <option value="webgl">Webgl</option>
+    </select>
+    <a ng-href={{hostGame}}><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
     <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Cancel</button>
   </div>
 
