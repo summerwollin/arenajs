@@ -75,7 +75,7 @@
         socket.on('auth-ok', function(msg) {
             console.log('socketService:[auth-ok]', msg);
             changeState(STATE_CONNECTED);
-            resolve();
+            resolve('resolve auth-ok');
             // $('#h1-username').text("User: " + msg.username);
             //vm.session.myUsername = msg.username;
             //$scope.$apply();

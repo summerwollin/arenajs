@@ -161,9 +161,23 @@
 
   function setupRoutes($routeProvider, $locationProvider, $httpProvider){
 
+
+
     $routeProvider
     .when('/', {
       template: '<aj-main></aj-main>',
+      resolve: {
+        startAuth: function (socketService, $location) {
+          socketService.startAuthorization()
+          .then(function (response) {
+            console.log('startAuth response: ', response);
+            $location.path('/lobby');
+          })
+          .catch(function (er) {
+            console.log('resolve catch: ', er);
+          })
+        }
+      }
     })
     .when('/lobby', {
       template: '<aj-lobby></aj-lobby>'
