@@ -2,12 +2,9 @@
   <div ng-show="!vm.hostGame" class="lobby col-md-8">
     <h1>Lobby</h1>
     <h3>Current Games:</h3>
-    <ul ng-repeat="game in vm.hostedGames">
-      <li>{{game.gameOptions}} hosted by {{game.hostUser}}</li>
-    </ul>
-    <h3 class="lobby-join">Join game - player1 vs player2</h3>
-    <h3 class="lobby-join">Join game - player1 vs player2</h3>
-    <h3 class="lobby-join">Join game - player1 vs player2</h3>
+    <div ng-repeat="game in vm.hostedGames">
+      <h4 class="lobby-join">{{game.gameOptions}} - hosted by: {{game.hostUser}}</h4>
+    </div>
     <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Host Game</button>
   </div>
   <div  ng-show="vm.hostGame" class="lobby col-md-8">
