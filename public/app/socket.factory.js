@@ -29,7 +29,8 @@
       startAuthorization,
       newGameHost,
       getHostedGames,
-      removeGameSessions
+      removeGameSessions,
+      joinGame
    };
 
     ////////////////////////////////////////////////
@@ -91,7 +92,11 @@
           console.log('socketService [on-new-host]', msg);
         })
 
-        //getHostedGames();
+        socket.on('join-game', function (msg) {
+          console.log('socketService recieved: [join-game]');
+        })
+
+
       });
 
       return promise;
@@ -114,7 +119,9 @@
       socket.emit('remove-game-session', myUsername);
     }
 
-
+    function joinGame(msg) {
+      socket.emit('join-game', msg);
+    }
 
     ////////////////////////////////////////////////
     // private functions

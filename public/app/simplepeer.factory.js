@@ -5,16 +5,32 @@
     .factory('simplepeerService', factory);
 
 
-  factory.$inject = [];
+  factory.$inject = ['socketService'];
 
-  function factory () {
+  function factory (socketService) {
+
+    var hostDataChannel;
 
     return {
       joinGame
     };
 
     function joinGame(game) {
-      console.log('simplepeer service');
+      console.log('simplepeer [joinGame]');
+      hostDataChannel = new SimplePeer({initiator: true});
+      hostDataChannel.on('signal', function(data) {
+        // Send join-game message to server here
+        socketService.joinGame({gameInfo: game, sdp: data, senderUsername: myUsername});
+      });
+      hostDataChannel.on('connect', function() {
+        // We're connected to the host here
+      });
+      hostDataChannel.on('close', function() {
+        // The connection to the host has been closed
+      });
+      hostDataChannel.on('error', function(err) {
+        // Similar to close.  Connetion killed.  Back
+      });
     }
 
   }
