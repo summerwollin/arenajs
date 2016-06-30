@@ -170,6 +170,7 @@
         startAuth: function (socketService, $location) {
           socketService.startAuthorization()
           .then(function (response) {
+            socketService.removeGameSessions();
             console.log('startAuth response: ', response);
             $location.path('/lobby');
           })
@@ -180,7 +181,20 @@
       }
     })
     .when('/lobby', {
-      template: '<aj-lobby></aj-lobby>'
+      template: '<aj-lobby></aj-lobby>',
+      resolve: {
+        startAuth: function (socketService, $location) {
+          socketService.startAuthorization()
+          .then(function (response) {
+            socketService.removeGameSessions();
+            console.log('startAuth response: ', response);
+          })
+          .catch(function (er) {
+            console.log('resolve catch: ', er);
+            $location.path('/');
+          })
+        }
+      }
     })
     .when('/invaders', {
       template: '<aj-invaders></aj-invaders>'

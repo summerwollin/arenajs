@@ -21,21 +21,30 @@
   function controller(socketService, $scope) {
     var vm = this;
     vm.startHosting = startHosting;
-    vm.hostedGames = socketService.hostedGames;
+    vm.hostedGames = [];
+    vm.joinGame = joinGame;
+    activate();
+
+    function activate() {
+      socketService.getHostedGames();
+      console.log('activate: ', vm.hostedGames);
+    }
 
     function startHosting(gameOption) {
       console.log('start hosting: ', gameOption);
       socketService.newGameHost(gameOption);
     }
 
-    $scope.$watch(function(){
-      console.log('getting watch hostedGames', socketService.hostedGames);
-      return socketService.hostedGames;
-    }, function(value){
-      console.log('watching hostedGames', value);
+    function joinGame(game) {
+      console.log('joinGame: ', game);
+    }
 
-      vm.hostedGames = value;
-    }, true)
+    $scope.$on('sending-hostedGames', function (event, data) {
+      console.log('on result data: ', data);
+      vm.hostedGames = data;
+      console.log('vm.hostedGames', vm.hostedGames);
+      $scope.$apply();
+    })
 
   }
 
