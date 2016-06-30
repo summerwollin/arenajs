@@ -5,9 +5,9 @@
     .factory('socketService', factory);
 
 
-  factory.$inject = ['sessionService', '$rootScope', 'simplepeerService'];
+  factory.$inject = ['sessionService', '$rootScope'];
 
-  function factory (sessionService, $rootScope, simplepeerService) {
+  function factory (sessionService, $rootScope) {
 
     const STATE_UNCONNECTED = 'STATE_UNCONNECTED';
     const STATE_CONNECTING = 'STATE_CONNECTING';
