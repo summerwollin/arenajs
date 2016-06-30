@@ -29,7 +29,14 @@
 
     $scope.$on('got-chat-message', function (event, data) {
       console.log('got-chat-message: ', data);
-      vm.messages.push(data);
+      vm.messages.forEach(function (msg) {
+        if (msg.username !== data.username && msg.message !== data.message) {
+          vm.messages.push(data);
+        }
+      })
+      if (vm.messages.length > 10) {
+        vm.messages.splice(0,1);
+      }
       console.log('vm.messages', vm.messages);
       $scope.$apply();
     })
