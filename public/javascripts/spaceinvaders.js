@@ -139,11 +139,6 @@ function GameLoop(game) {
 }
 
 
-//  The stop function stops the game.
-Game.prototype.stop = function Stop() {
-    clearInterval(this.intervalId);
-};
-
 //  Inform the game a key is down.
 Game.prototype.keyDown = function(keyCode) {
   console.log('keyDown:' + keyCode)
