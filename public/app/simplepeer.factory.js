@@ -12,7 +12,8 @@
     var hostDataChannel;
 
     return {
-      joinGame
+      joinGame,
+      onJoinGame
     };
 
     function joinGame(game) {
@@ -31,6 +32,9 @@
       hostDataChannel.on('error', function(err) {
         // Similar to close.  Connetion killed.  Back
       });
+    }
+    function onJoinGame(msg) {
+      hostDataChannel.signal(msg.sdp);
     }
 
   }

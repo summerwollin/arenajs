@@ -5,9 +5,9 @@
     .factory('socketService', factory);
 
 
-  factory.$inject = ['sessionService', '$rootScope'];
+  factory.$inject = ['sessionService', '$rootScope', 'simplepeerService'];
 
-  function factory (sessionService, $rootScope) {
+  function factory (sessionService, $rootScope, simplepeerService) {
 
     const STATE_UNCONNECTED = 'STATE_UNCONNECTED';
     const STATE_CONNECTING = 'STATE_CONNECTING';
@@ -93,7 +93,8 @@
         })
 
         socket.on('join-game', function (msg) {
-          console.log('socketService recieved: [join-game]');
+          console.log('socketService recieved: [join-game]', msg);
+          simplepeerService.onJoinGame(msg);
         })
 
       });
