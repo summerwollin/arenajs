@@ -168,6 +168,7 @@
       template: '<aj-main></aj-main>',
       resolve: {
         startAuth: function (socketService, $location) {
+          console.log('startAuthorization /');
           socketService.startAuthorization()
           .then(function (response) {
             socketService.removeGameSessions();
@@ -184,6 +185,7 @@
       template: '<aj-lobby></aj-lobby>',
       resolve: {
         startAuth: function (socketService, $location) {
+          console.log('startAuthorization /lobby');
           socketService.startAuthorization()
           .then(function (response) {
             socketService.removeGameSessions();

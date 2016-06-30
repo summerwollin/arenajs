@@ -3,7 +3,7 @@
     <h1>Lobby</h1>
     <h3>Current Games:</h3>
     <div ng-repeat="game in vm.hostedGames track by $index">
-      <h4 ng-click="vm.joinGame(game)" class="lobby-join">{{game.gameOptions}} - hosted by: {{game.hostUser}}</h4>
+      <h4 ng-click="vm.joinGame(game)" class="lobby-join">{{game.gameOptions.game}}, {{game.gameOptions.numPlayers}} Players, - hosted by: {{game.hostUser}}</h4>
     </div>
     <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Host Game</button>
   </div>
@@ -13,7 +13,8 @@
       <option value="invaders">Space Invaders</option>
       <option value="webgl">Webgl</option>
     </select>
-    <a ng-click="vm.startHosting(gameChoice)" ng-href={{gameChoice}}><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
+    <input ng-model="numPlayers" type="number" name="numPlayers">
+    <a ng-click="vm.startHosting(gameChoice, numPlayers)" ng-href={{gameChoice}}><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
     <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Cancel</button>
   </div>
 

@@ -96,7 +96,6 @@
           console.log('socketService recieved: [join-game]');
         })
 
-
       });
 
       return promise;
@@ -120,6 +119,7 @@
     }
 
     function joinGame(msg) {
+      console.log('socketService [join-game]');
       socket.emit('join-game', msg);
     }
 

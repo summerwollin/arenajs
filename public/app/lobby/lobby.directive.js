@@ -30,9 +30,12 @@
       console.log('activate: ', vm.hostedGames);
     }
 
-    function startHosting(gameOption) {
-      console.log('start hosting: ', gameOption);
-      socketService.newGameHost(gameOption);
+    function startHosting(gameOption, numPlayers) {
+      if (numPlayers === undefined) {
+        numPlayers = 2;
+      }
+      console.log('start hosting: ', gameOption, numPlayers);
+      socketService.newGameHost({game: gameOption, numPlayers: numPlayers});
     }
 
     function joinGame(game) {

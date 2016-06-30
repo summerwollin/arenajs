@@ -20,7 +20,7 @@
       hostDataChannel = new SimplePeer({initiator: true});
       hostDataChannel.on('signal', function(data) {
         // Send join-game message to server here
-        socketService.joinGame({gameInfo: game, sdp: data, senderUsername: myUsername});
+        socketService.joinGame({gameInfo: game, sdp: data, senderUsername: socketService.myUsername});
       });
       hostDataChannel.on('connect', function() {
         // We're connected to the host here
