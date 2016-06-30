@@ -5,24 +5,32 @@
 
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  /*background-color: #0a4e5c;
-  color: white;*/
+  background-color: #02565E;
+  color: white;
 }
 a {
-  color: #66d7ee;
+  color: #9AD72D;
 }
 input {
   color: black;
 }
+.btn-default {
+  background-color: #9AD72D;
+  border: #9AD72D
+}
+.btn-default:hover {
+  background-color: #C8F27B;
+  border: #C8F27B;
+}
 .h1-logo {
   font-family: conthrax;
-  color: #e83a30;
+  color: #E83930;
   font-weight: bolder;
   font-size: 70px;
 }
 .main {
   height: 100%;
-  border-right: 3px solid black;
+  /*border-right: 3px solid #5FB0B7;*/
   padding: 0;
 }
 .main-imagearea {
@@ -41,24 +49,44 @@ input {
   padding: 20px;
   padding-left: 60px;
   padding-right: 60px;
+  background-color: #0C6E77;
+  border-radius: 15px;
+  margin: 20px;
+  margin-left: 30px;
+}
+.main-about {
+  background-color: #0C6E77;
+  border-radius: 15px;
+  margin-right: 15px;
+  /*padding: 20px;*/
 }
 .main-side {
   text-align: center;
   padding-top: 30px;
 }
 .main-side h3 {
-  padding-top: 80px;
+  margin-top: 50px;
+  padding-top: 30px;
 }
 .main-side p {
   padding: 30px;
 }
+.main-login {
+  background-color: #0C6E77;
+  border-radius: 15px;
+  margin-right: 15px;
+  padding: 20px;
+}
 .lobby {
   height: 100%;
-  border-right: 3px solid black;
   text-align: center;
+  border-radius: 15px;
+  /*margin: 30px;*/
+  padding: 20px;
+  padding-right: 100px;
 }
 .lobby-join {
-  background-color: #5c0e0a;
+  background-color: #FB6058;
   border-radius: 10px;
   margin-left: 200px;
   margin-right: 200px;
@@ -70,4 +98,19 @@ input {
 }
 #gameCanvas {
   background-color: #232E37;
+}
+.form-horizontal {
+  margin-left: 300px;
+}
+.input-numPlayers {
+  width: 40px;
+  border-radius: 5px;
+}
+.chat-div {
+  background-color: #0C6E77;
+  text-align: center;
+  border-radius: 15px;
+  padding: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
 }

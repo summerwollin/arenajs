@@ -5,20 +5,29 @@
     <div ng-repeat="game in vm.hostedGames track by $index">
       <h4 ng-click="vm.joinGame(game)" class="lobby-join">{{game.gameOptions.game}}, {{game.gameOptions.numPlayers}} Players, - hosted by: {{game.hostUser}}</h4>
     </div>
-    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Host Game</button>
+    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-default" type="button" name="button">Host Game</button>
   </div>
   <div  ng-show="vm.hostGame" class="lobby col-md-8">
     <h1>Game Options</h1>
+    <br>
+    <br>
+    <label>Game:</label>
     <select ng-model="gameChoice">
       <option value="invaders">Space Invaders</option>
       <option value="webgl">Webgl</option>
     </select>
-    <input ng-model="numPlayers" type="number" name="numPlayers">
-    <a ng-click="vm.startHosting(gameChoice, numPlayers)" ng-href={{gameChoice}}><button class="btn btn-primary" type="button" name="button">Host Game</button></a>
-    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-primary" type="button" name="button">Cancel</button>
+    &nbsp;
+    <label>Players:</label>
+    <input ng-model="numPlayers" class="input-numPlayers" type="number" name="numPlayers">
+    <br>
+    <br>
+    <br>
+    <a ng-click="vm.startHosting(gameChoice, numPlayers)" ng-href={{gameChoice}}><button class="btn btn-default" type="button" name="button">Host Game</button></a>
+    <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-default" type="button" name="button">Cancel</button>
   </div>
 
   <div class="col-md-4 lobby-side">
-    <aj-chat myUsername="myUsername"></aj-chat>
+    <aj-users></aj-users>
+    <aj-chat></aj-chat>
   </div>
 </div>
