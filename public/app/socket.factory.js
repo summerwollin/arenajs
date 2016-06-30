@@ -31,7 +31,8 @@
       getHostedGames,
       removeGameSessions,
       joinGame,
-      getUsers
+      getUsers,
+      sendMessage
    };
 
     ////////////////////////////////////////////////
@@ -81,6 +82,7 @@
         socket.on('auth-ok', function(msg) {
             console.log('socketService:[auth-ok]', msg);
             myUsername = msg.username;
+            console.log('auth-ok username: ', myUsername);
             changeState(STATE_CONNECTED);
             resolve('resolve auth-ok');
             // $('#h1-username').text("User: " + msg.username);
@@ -96,6 +98,11 @@
         socket.on('join-game', function (msg) {
           console.log('socketService recieved: [join-game]', msg);
           simplepeerService.onJoinGame(msg);
+        })
+
+        socket.on('send-message', function (msg) {
+          console.log('got send msg: ', msg);
+          $rootScope.$broadcast('got-chat-message', msg);
         })
 
       });
@@ -140,6 +147,11 @@
         console.log('get-users: ', users);
         $rootScope.$broadcast('got-users', users);
       })
+    }
+
+    function sendMessage(msg) {
+      console.log('socketService [sendMessage]: ', msg, myUsername);
+      socket.emit('send-message', {message: msg, username: myUsername});
     }
 
   }
