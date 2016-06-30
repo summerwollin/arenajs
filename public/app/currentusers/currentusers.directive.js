@@ -21,8 +21,18 @@
 
   function controller(socketService, $scope) {
     let vm = this;
+    vm.users = [];
+    activate();
 
+    function activate() {
+      socketService.getUsers();
+    }
 
+    $scope.$on('got-users', function (event, data) {
+      console.log('got-users-broadcast: ', data);
+      vm.users = data;
+      $scope.$apply();
+    })
   }
 
 }());

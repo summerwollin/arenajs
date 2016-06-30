@@ -30,7 +30,8 @@
       newGameHost,
       getHostedGames,
       removeGameSessions,
-      joinGame
+      joinGame,
+      getUsers
    };
 
     ////////////////////////////////////////////////
@@ -130,6 +131,14 @@
       state = newState;
       stateChangeHandlers.forEach(function (fn) {
         fn(newState);
+      })
+    }
+
+    function getUsers() {
+      socket.emit('get-users');
+      socket.on('get-users', function (users) {
+        console.log('get-users: ', users);
+        $rootScope.$broadcast('got-users', users);
       })
     }
 

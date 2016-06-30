@@ -106,24 +106,6 @@
       initializePeer(true);
     }
 
-    $scope.$watch(function(){
-      console.log('getting watch myUsername');
-      return sessionService.myUsername;
-    }, function(value){
-      console.log('watching myUsername', value);
-
-      vm.myUsername = value;
-    }, true)
-
-    $scope.$watchCollection(function(){
-      console.log('getting watch users');
-      return sessionService.users;
-    }, function(value){
-      console.log('watching users', value, vm.users);
-
-      vm.users = value;
-    }, true)
-
   //   document.querySelector('#simple-peer-form').addEventListener('submit', function(ev) {
   //     ev.preventDefault();
   //     if(p) {
