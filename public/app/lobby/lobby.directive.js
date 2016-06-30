@@ -22,6 +22,12 @@
     var vm = this;
     vm.startHosting = startHosting;
     vm.hostedGames = [];
+    activate();
+
+    function activate() {
+      socketService.getHostedGames();
+      console.log('activate: ', vm.hostedGames);
+    }
 
     function startHosting(gameOption) {
       console.log('start hosting: ', gameOption);
