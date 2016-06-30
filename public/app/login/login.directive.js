@@ -29,7 +29,7 @@
     });
 
     function login() {
-      return $http.post('http://localhost:3000/login', {username: vm.form.login.username})
+      return $http.post('https://arenajs.herokuapp.com/login', {username: vm.form.login.username})
       .then(function (response) {
         console.log('set token');
         socketService.setToken(response.data.token);
