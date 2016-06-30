@@ -170,6 +170,7 @@
         startAuth: function (socketService, $location) {
           socketService.startAuthorization()
           .then(function (response) {
+            socketService.removeGameSessions();
             console.log('startAuth response: ', response);
             $location.path('/lobby');
           })
@@ -185,6 +186,7 @@
         startAuth: function (socketService, $location) {
           socketService.startAuthorization()
           .then(function (response) {
+            socketService.removeGameSessions();
             console.log('startAuth response: ', response);
           })
           .catch(function (er) {

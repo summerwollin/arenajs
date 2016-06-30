@@ -28,7 +28,8 @@
       setToken,
       startAuthorization,
       newGameHost,
-      getHostedGames
+      getHostedGames,
+      removeGameSessions
    };
 
     ////////////////////////////////////////////////
@@ -108,6 +109,11 @@
         console.log('socketFactory [send-hosted-games]: ', msg);
       })
     }
+
+    function removeGameSessions() {
+      socket.emit('remove-game-session', myUsername);
+    }
+
 
 
     ////////////////////////////////////////////////
