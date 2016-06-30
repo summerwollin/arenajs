@@ -16,9 +16,9 @@
     }
   }
 
-  controller.$inject = ['socketService', '$scope'];
+  controller.$inject = ['socketService', '$scope', 'simplepeerService'];
 
-  function controller(socketService, $scope) {
+  function controller(socketService, $scope, simplepeerService) {
     var vm = this;
     vm.startHosting = startHosting;
     vm.hostedGames = [];
@@ -37,6 +37,7 @@
 
     function joinGame(game) {
       console.log('joinGame: ', game);
+      simplepeerService.joinGame(game);
     }
 
     $scope.$on('sending-hostedGames', function (event, data) {
