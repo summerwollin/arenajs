@@ -17,6 +17,7 @@
     var state = STATE_UNCONNECTED;
     var stateChangeHandlers = [];
     var myUsername = "";
+    var messages = [];
 
     return {
       STATE_UNCONNECTED,
@@ -32,7 +33,8 @@
       removeGameSessions,
       joinGame,
       getUsers,
-      sendMessage
+      sendMessage,
+      messages
    };
 
     ////////////////////////////////////////////////
@@ -86,7 +88,7 @@
             changeState(STATE_CONNECTED);
             resolve('resolve auth-ok');
             // $('#h1-username').text("User: " + msg.username);
-            //vm.session.myUsername = msg.username;
+            //session.myUsername = msg.username;
             //$scope.$apply();
         });
 
@@ -101,9 +103,18 @@
         })
 
         socket.on('send-message', function (msg) {
-          console.log('got send msg: ', msg);
-          $rootScope.$broadcast('got-chat-message', msg);
+          if (messages.length === 0) {
+            messages.push(msg);
+          }
+          else if (messages[messages.length - 1].message !== msg.message || messages[messages.length - 1].username !== msg.username) {
+            messages.push(msg);
+          }
+          if (messages.length > 10) {
+            messages.splice(0,1);
+          }
+          $rootScope.$broadcast('got-chat-message');
         })
+
 
       });
 
