@@ -1,7 +1,25 @@
-body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@font-face {
+  font-family: conthrax;
+  src: url(UnderAuthority.ttf);
 }
 
+body {
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  /*background-color: #0a4e5c;
+  color: white;*/
+}
+a {
+  color: #66d7ee;
+}
+input {
+  color: black;
+}
+.h1-logo {
+  font-family: conthrax;
+  color: #e83a30;
+  font-weight: bolder;
+  font-size: 70px;
+}
 .main {
   height: 100%;
   border-right: 3px solid black;
