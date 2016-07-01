@@ -18,7 +18,7 @@
 
     function joinGame(game) {
       console.log('peerService [joinGame]');
-      hostDataChannel = new SimplePeer({initiator: true});
+      dataChannel = new SimplePeer({initiator: true});
       dataChannel.on('signal', function(data) {
         // Send join-game message to server here
         socketService.joinGame({gameInfo: game, sdp: data, senderUsername: socketService.myUsername});
