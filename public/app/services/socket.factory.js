@@ -99,7 +99,6 @@
 
         socket.on('join-game', function (msg) {
           console.log('socketService recieved: [join-game]', msg);
-          simplepeerService.onJoinGame(msg);
         })
 
         socket.on('send-message', function (msg) {

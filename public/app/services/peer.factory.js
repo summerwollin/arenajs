@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('arenaApp')
-    .factory('simplepeerService', factory);
+    .factory('peerService', factory);
 
 
   factory.$inject = ['socketService'];
@@ -17,7 +17,7 @@
     };
 
     function joinGame(game) {
-      console.log('simplepeer [joinGame]');
+      console.log('peerService [joinGame]');
       hostDataChannel = new SimplePeer({initiator: true});
       hostDataChannel.on('signal', function(data) {
         // Send join-game message to server here
@@ -36,6 +36,7 @@
     function onJoinGame(msg) {
       hostDataChannel.signal(msg.sdp);
     }
+
 
   }
 }());
