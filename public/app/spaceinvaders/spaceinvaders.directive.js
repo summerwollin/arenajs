@@ -16,11 +16,6 @@
     }
   }
 
-  // move game logic to another file
-  // here, run new Game(canvas)
-  // game.start()
-  // $scope.$on('destroy', game.removeListeners()) <-- implement a removeListeners method, that removes all the key events etc...
-
   function link(scope, element, attributes) {
 
     //  Setup the canvas.

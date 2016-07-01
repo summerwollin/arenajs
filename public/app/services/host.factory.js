@@ -9,9 +9,22 @@
 
   function factory () {
 
-    return {};
+    var peers = [];
+    var numPlayers;
 
+    return {
+      hostGame
+    };
 
+    function hostGame(options) {
+      numPlayers = options.numPlayers;
+    }
+
+    function stopHosting() {
+      peers.forEach(function (peer) {
+        peer.destroy();
+      })
+    }
 
   }
 }());
