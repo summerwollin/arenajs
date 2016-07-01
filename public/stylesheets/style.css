@@ -1,6 +1,6 @@
 @font-face {
-  font-family: conthrax;
-  src: url(UnderAuthority.ttf);
+  font-family: Base;
+  src: url(Base.ttf);
 }
 
 body {
@@ -23,9 +23,8 @@ input {
   border: #C8F27B;
 }
 .h1-logo {
-  font-family: conthrax;
-  color: #E83930;
-  font-weight: bolder;
+  font-family: Base;
+  color: #BA8515;
   font-size: 70px;
 }
 .main {
