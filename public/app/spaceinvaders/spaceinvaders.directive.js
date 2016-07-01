@@ -61,10 +61,13 @@
   }
 
 
-  controller.$inject = ['$scope', '$location'];
+  controller.$inject = ['$rootScope', '$location', 'peerService'];
 
-  function controller($scope, $location) {
+  function controller($rootScope, $location, peerService) {
     var vm = this;
+
+    console.log("isHost", $rootScope.isHost);
+    console.log("gameOptions", $rootScope.options);
 
   }
 
