@@ -6,9 +6,6 @@
 
   function invadersDirective () {
     return {
-      scope: {
-        filters: '='
-      },
       templateUrl: 'app/spaceinvaders/spaceinvaders.directive.html',
       controller: controller,
       controllerAs: 'vm',
@@ -25,7 +22,13 @@
     canvas.height = 600;
 
     //  Create the game.
-    window.game = new Game();
+    window.game = new Game(
+      scope.isHost,
+      scope.options,
+      scope.socketService,
+      scope.peerService,
+      scope.hostService
+    );
 
     //  Initialise it with the game canvas.
     game.initialise(canvas);
@@ -61,14 +64,13 @@
   }
 
 
-  controller.$inject = ['$rootScope', '$location', 'peerService'];
+  controller.$inject = ['$scope', '$rootScope', '$location', 'peerService', 'hostService', 'socketService'];
 
-  function controller($rootScope, $location, peerService) {
+  function controller($scope, $rootScope, $location, peerService, hostService, socketService) {
     var vm = this;
-
-    console.log("isHost", $rootScope.isHost);
-    console.log("gameOptions", $rootScope.options);
-
+    $scope.peerService = peerService;
+    $scope.hostService = hostService;
+    $scope.socketService = socketService;
   }
 
 

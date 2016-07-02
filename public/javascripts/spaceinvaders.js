@@ -10,7 +10,9 @@ function ViewMode(shipSrc, invaderSrc, width, height) {
   this.shipHeight = height;
 }
 
-function Game() {
+function Game(isHost, options, socketService, peerService, hostService) {
+  console.log("isHost", isHost);
+  console.log("gameOptions", options, socketService, peerService, hostService);
 
     //  Set the initial config.
     this.config = {
@@ -30,7 +32,12 @@ function Game() {
         invaderFiles: 10,
         shipSpeed: 120,
         levelDifficultyMultiplier: 0.2,
-        pointsPerInvader: 5
+        pointsPerInvader: 5,
+        isHost,
+        options,
+        socketService,
+        peerService,
+        hostService
     };
 
     //  All state is in the variables below.
@@ -96,7 +103,7 @@ Game.prototype.moveToState = function(state) {
 //  Start the Game.
 Game.prototype.start = function() {
     //  Move into the 'welcome' state.
-    this.moveToState(new WelcomeState());
+    this.moveToState(new WelcomeState(this.config));
 
     //  Set the game variables.
     this.lives = 3;
@@ -159,8 +166,8 @@ Game.prototype.keyUp = function(keyCode) {
     }
 };
 
-function WelcomeState() {
-
+function WelcomeState(config) {
+  console.log('WelcomeState config', config);
 }
 
 WelcomeState.prototype.update = function(game, dt) {
