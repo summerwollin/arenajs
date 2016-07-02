@@ -6,20 +6,12 @@
 
   function invadersDirective () {
     return {
-      scope: {
-        filters: '='
-      },
       templateUrl: 'app/spaceinvaders/spaceinvaders.directive.html',
       controller: controller,
       controllerAs: 'vm',
       link: link
     }
   }
-
-  // move game logic to another file
-  // here, run new Game(canvas)
-  // game.start()
-  // $scope.$on('destroy', game.removeListeners()) <-- implement a removeListeners method, that removes all the key events etc...
 
   function link(scope, element, attributes) {
 
@@ -30,7 +22,13 @@
     canvas.height = 600;
 
     //  Create the game.
-    window.game = new Game();
+    window.game = new Game(
+      scope.isHost,
+      scope.options,
+      scope.socketService,
+      scope.peerService,
+      scope.hostService
+    );
 
     //  Initialise it with the game canvas.
     game.initialise(canvas);
@@ -66,11 +64,13 @@
   }
 
 
-  controller.$inject = ['$scope', '$location'];
+  controller.$inject = ['$scope', '$rootScope', '$location', 'peerService', 'hostService', 'socketService'];
 
-  function controller($scope, $location) {
+  function controller($scope, $rootScope, $location, peerService, hostService, socketService) {
     var vm = this;
-
+    $scope.peerService = peerService;
+    $scope.hostService = hostService;
+    $scope.socketService = socketService;
   }
 
 

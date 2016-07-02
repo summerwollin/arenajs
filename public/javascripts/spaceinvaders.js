@@ -10,7 +10,9 @@ function ViewMode(shipSrc, invaderSrc, width, height) {
   this.shipHeight = height;
 }
 
-function Game() {
+function Game(isHost, options, socketService, peerService, hostService) {
+  console.log("isHost", isHost);
+  console.log("gameOptions", options, socketService, peerService, hostService);
 
     //  Set the initial config.
     this.config = {
@@ -30,7 +32,12 @@ function Game() {
         invaderFiles: 10,
         shipSpeed: 120,
         levelDifficultyMultiplier: 0.2,
-        pointsPerInvader: 5
+        pointsPerInvader: 5,
+        isHost,
+        options,
+        socketService,
+        peerService,
+        hostService
     };
 
     //  All state is in the variables below.
@@ -95,8 +102,22 @@ Game.prototype.moveToState = function(state) {
 
 //  Start the Game.
 Game.prototype.start = function() {
+    if (this.config.isHost) {
+      let hostService = this.config.hostService;
+      let socketService = this.config.socketService;
+
+      hostService.hostGame(this.config.options.numPlayers);
+      hostService.onSignallingReady(function(data, username) {
+        socketService.answer(username, data);
+      });
+
+      socketService.onJoinGame(function(msg) {
+        hostService.joinGameReceived(msg);
+      });
+
+    }
     //  Move into the 'welcome' state.
-    this.moveToState(new WelcomeState());
+    this.moveToState(new WelcomeState(this));
 
     //  Set the game variables.
     this.lives = 3;
@@ -159,8 +180,15 @@ Game.prototype.keyUp = function(keyCode) {
     }
 };
 
-function WelcomeState() {
-
+function WelcomeState(game) {
+  if(game.config.isHost) {
+    game.config.hostService.onAllPeersConnected(function() {
+      game.level = 1;
+      game.score = 0;
+      game.lives = 3;
+      game.moveToState(new LevelIntroState(game.level));
+    })
+  }
 }
 
 WelcomeState.prototype.update = function(game, dt) {
@@ -189,13 +217,13 @@ WelcomeState.prototype.draw = function(game, dt, ctx) {
 };
 
 WelcomeState.prototype.keyDown = function(game, keyCode) {
-    if (keyCode == 32) /*space*/ {
-        //  Space starts the game.
-        game.level = 1;
-        game.score = 0;
-        game.lives = 3;
-        game.moveToState(new LevelIntroState(game.level));
-    }
+    //if (keyCode == 32) /*space*/ {
+    //    //  Space starts the game.
+    //    game.level = 1;
+    //    game.score = 0;
+    //    game.lives = 3;
+    //    game.moveToState(new LevelIntroState(game.level));
+    //}
 };
 
 function GameOverState() {
@@ -551,6 +579,10 @@ PlayState.prototype.keyDown = function(game, keyCode) {
     if (keyCode == 32) {
         //  Fire!
         this.fireRocket();
+    }
+
+    if(game.config.isHost) {
+      game.config.hostService.sendBroadcastMessage({type: 'hostKeydown', keyCode});
     }
 
 };
