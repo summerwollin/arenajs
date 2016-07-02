@@ -12,15 +12,19 @@
     var peers = [];
     var numPlayers;
     var onSignallingReadyCallback = null;
+    var allPeersConnectedCallback = null;
 
     return {
       hostGame,
       numPeers,
       joinGameReceived,
-      onSignallingReady
+      onSignallingReady,
+      onAllPeersConnected,
+      sendBroadcastMessage
     };
 
-    function hostGame() {
+    function hostGame(numberOfPlayers) {
+      numPlayers = numberOfPlayers;
       console.log('hostGame() called');
     }
 
@@ -33,6 +37,7 @@
         let peer = {
           username: msg.senderUsername,
           sdp: msg.sdp,
+          connected: false,
           dataChannel: new SimplePeer({trickle: false})
         }
 
@@ -48,6 +53,8 @@
 
         peer.dataChannel.on('connect', function() {
           console.log('peer.dataChannel.onConnect');
+          peer.connected = true;
+          anotherPeerConnected();
         });
 
         peer.dataChannel.signal(peer.sdp);
@@ -66,6 +73,17 @@
       onSignallingReadyCallback = callback;
     }
 
+    function onAllPeersConnected(callback) {
+      console.log("onPeersConnected", callback);
+      allPeersConnectedCallback = callback;
+    }
+
+    function sendBroadcastMessage(msg) {
+      peers.forEach(function(peer) {
+        peer.dataChannel.send(JSON.stringify(msg));
+      })
+    }
+
     ////////////////////////////////////////////
     // Private functions
     function findPeerForUsername(username) {
@@ -78,6 +96,26 @@
       });
 
       return result;
+    }
+
+    function anotherPeerConnected() {
+      if(peers.length != numPlayers - 1) {
+        //Still waiting for more peers
+        return;
+      }
+
+      var allConnected = true;
+      peers.forEach(function(peer) {
+        if(!peer.connected) {
+          allConnected = false;
+        }
+      })
+
+      if (allConnected) {
+        if (allPeersConnectedCallback) {
+          allPeersConnectedCallback();
+        }
+      }
     }
   }
 }());

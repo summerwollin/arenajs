@@ -35,6 +35,10 @@
         console.log('peerService [dataChannel.onError]', err)
         // Similar to close.  Connetion killed.  Back
       });
+      dataChannel.on('data', function(data) {
+        let msg = JSON.parse(data);
+        console.log('peerService [dataChannel.onData]', msg)
+      })
       socketService.onAnswer(function(msg) {
         console.log("peerService [answering]", msg)
         if(!hasReceivedAnswer) {

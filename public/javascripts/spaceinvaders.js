@@ -106,7 +106,7 @@ Game.prototype.start = function() {
       let hostService = this.config.hostService;
       let socketService = this.config.socketService;
 
-      hostService.hostGame(this.config.options);
+      hostService.hostGame(this.config.options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
         socketService.answer(username, data);
       });
@@ -117,7 +117,7 @@ Game.prototype.start = function() {
 
     }
     //  Move into the 'welcome' state.
-    this.moveToState(new WelcomeState(this.config));
+    this.moveToState(new WelcomeState(this));
 
     //  Set the game variables.
     this.lives = 3;
@@ -180,8 +180,15 @@ Game.prototype.keyUp = function(keyCode) {
     }
 };
 
-function WelcomeState(config) {
-
+function WelcomeState(game) {
+  if(game.config.isHost) {
+    game.config.hostService.onAllPeersConnected(function() {
+      game.level = 1;
+      game.score = 0;
+      game.lives = 3;
+      game.moveToState(new LevelIntroState(game.level));
+    })
+  }
 }
 
 WelcomeState.prototype.update = function(game, dt) {
@@ -210,13 +217,13 @@ WelcomeState.prototype.draw = function(game, dt, ctx) {
 };
 
 WelcomeState.prototype.keyDown = function(game, keyCode) {
-    if (keyCode == 32) /*space*/ {
-        //  Space starts the game.
-        game.level = 1;
-        game.score = 0;
-        game.lives = 3;
-        game.moveToState(new LevelIntroState(game.level));
-    }
+    //if (keyCode == 32) /*space*/ {
+    //    //  Space starts the game.
+    //    game.level = 1;
+    //    game.score = 0;
+    //    game.lives = 3;
+    //    game.moveToState(new LevelIntroState(game.level));
+    //}
 };
 
 function GameOverState() {
@@ -572,6 +579,10 @@ PlayState.prototype.keyDown = function(game, keyCode) {
     if (keyCode == 32) {
         //  Fire!
         this.fireRocket();
+    }
+
+    if(game.config.isHost) {
+      game.config.hostService.sendBroadcastMessage({type: 'hostKeydown', keyCode});
     }
 
 };
