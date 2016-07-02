@@ -102,6 +102,20 @@ Game.prototype.moveToState = function(state) {
 
 //  Start the Game.
 Game.prototype.start = function() {
+    if (this.config.isHost) {
+      let hostService = this.config.hostService;
+      let socketService = this.config.socketService;
+
+      hostService.hostGame(this.config.options);
+      hostService.onSignallingReady(function(data, username) {
+        socketService.answer(username, data);
+      });
+
+      socketService.onJoinGame(function(msg) {
+        hostService.joinGameReceived(msg);
+      });
+
+    }
     //  Move into the 'welcome' state.
     this.moveToState(new WelcomeState(this.config));
 
@@ -167,7 +181,7 @@ Game.prototype.keyUp = function(keyCode) {
 };
 
 function WelcomeState(config) {
-  console.log('WelcomeState config', config);
+
 }
 
 WelcomeState.prototype.update = function(game, dt) {

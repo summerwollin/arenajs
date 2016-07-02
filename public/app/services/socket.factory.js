@@ -18,6 +18,8 @@
     var stateChangeHandlers = [];
     var myUsername = "";
     var messages = [];
+    var onJoinGameCallback = null;
+    var onAnswerCallback = null;
 
     return {
       STATE_UNCONNECTED,
@@ -34,7 +36,11 @@
       joinGame,
       getUsers,
       sendMessage,
-      messages
+      messages,
+      onJoinGame,
+      answer,
+      onAnswer,
+      getMyUsername
    };
 
     ////////////////////////////////////////////////
@@ -69,6 +75,7 @@
         }
 
         socket = io();
+        console.log("~~~~~~~~ Adding socket ~~~~~~", socket)
 
         socket.on('connect', function() {
           console.log('socketService:[connect]');
@@ -98,7 +105,16 @@
         })
 
         socket.on('join-game', function (msg) {
-          console.log('socketService recieved: [join-game]', msg);
+          console.log('socket on [join-game]');
+          if (onJoinGameCallback) {
+            onJoinGameCallback(msg);
+          }
+        })
+
+        socket.on('answer', function (msg) {
+          if(onAnswerCallback) {
+            onAnswerCallback(msg);
+          }
         })
 
         socket.on('send-message', function (msg) {
@@ -138,17 +154,25 @@
     }
 
     function joinGame(msg) {
-      console.log('socketService [join-game]');
+      console.log('socketService.emit[join-game]');
       socket.emit('join-game', msg);
     }
 
-    ////////////////////////////////////////////////
-    // private functions
-    function changeState(newState) {
-      state = newState;
-      stateChangeHandlers.forEach(function (fn) {
-        fn(newState);
-      })
+    function answer(target, sdp) {
+      console.log('socketService.emit[answer]');
+      socket.emit('answer', {host: myUsername, peer: target, sdp});
+    }
+
+    function getMyUsername() {
+      return myUsername;
+    }
+
+    function onJoinGame(callback) {
+      onJoinGameCallback = callback;
+    }
+
+    function onAnswer(callback) {
+      onAnswerCallback = callback;
     }
 
     function getUsers() {
@@ -162,6 +186,15 @@
     function sendMessage(msg) {
       console.log('socketService [sendMessage]: ', msg, myUsername);
       socket.emit('send-message', {message: msg, username: myUsername});
+    }
+
+    ////////////////////////////////////////////////
+    // private functions
+    function changeState(newState) {
+      state = newState;
+      stateChangeHandlers.forEach(function (fn) {
+        fn(newState);
+      })
     }
 
   }
