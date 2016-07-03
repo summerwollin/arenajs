@@ -16,15 +16,15 @@
     }
   }
 
-  controller.$inject = ['sessionService', 'socketService', '$scope'];
+  controller.$inject = ['sessionService', 'backendService', '$scope'];
 
-  function controller(sessionService, socketService, $scope) {
+  function controller(sessionService, backendService, $scope) {
     let vm = this;
     vm.sendMessage = sendMessage;
-    vm.messages = socketService.messages;
+    vm.messages = backendService.messages;
 
     function sendMessage() {
-      socketService.sendMessage(vm.form.sendMessage.message);
+      backendService.sendMessage(vm.form.sendMessage.message);
     }
 
     $scope.$on('got-chat-message', function (event) {

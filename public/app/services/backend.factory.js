@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('arenaApp')
-    .factory('socketService', factory);
+    .factory('backendService', factory);
 
 
   factory.$inject = ['sessionService', '$rootScope'];
@@ -78,18 +78,18 @@
         console.log("~~~~~~~~ Adding socket ~~~~~~", socket)
 
         socket.on('connect', function() {
-          console.log('socketService:[connect]');
+          console.log('backendService:[connect]');
           socket.emit('auth', localStorage.getItem('token'));
         });
 
         socket.on('error', function() {
-          console.log('socketService:[error]');
+          console.log('backendService:[error]');
           changeState(STATE_UNCONNECTED);
           reject('socket error');
         });
 
         socket.on('auth-ok', function(msg) {
-            console.log('socketService:[auth-ok]', msg);
+            console.log('backendService:[auth-ok]', msg);
             myUsername = msg.username;
             console.log('auth-ok username: ', myUsername);
             changeState(STATE_CONNECTED);
@@ -101,7 +101,7 @@
 
         socket.on('on-new-host', function(msg) {
           getHostedGames();
-          console.log('socketService [on-new-host]', msg);
+          console.log('backendService [on-new-host]', msg);
         })
 
         socket.on('join-game', function (msg) {
@@ -137,7 +137,7 @@
     }
 
     function newGameHost(options) {
-      console.log('socketService [new-host]', myUsername);
+      console.log('backendService [new-host]', myUsername);
       socket.emit('new-host', {gameOptions: options, hostUser: myUsername});
     }
 
@@ -154,12 +154,12 @@
     }
 
     function joinGame(msg) {
-      console.log('socketService.emit[join-game]');
+      console.log('backendService.emit[join-game]');
       socket.emit('join-game', msg);
     }
 
     function answer(target, sdp) {
-      console.log('socketService.emit[answer]');
+      console.log('backendService.emit[answer]');
       socket.emit('answer', {host: myUsername, peer: target, sdp});
     }
 
@@ -184,7 +184,7 @@
     }
 
     function sendMessage(msg) {
-      console.log('socketService [sendMessage]: ', msg, myUsername);
+      console.log('backendService [sendMessage]: ', msg, myUsername);
       socket.emit('send-message', {message: msg, username: myUsername});
     }
 

@@ -10,9 +10,9 @@ function ViewMode(shipSrc, invaderSrc, width, height) {
   this.shipHeight = height;
 }
 
-function Game(isHost, options, socketService, peerService, hostService) {
+function Game(isHost, options, backendService, peerService, hostService) {
   console.log("isHost", isHost);
-  console.log("gameOptions", options, socketService, peerService, hostService);
+  console.log("gameOptions", options, backendService, peerService, hostService);
 
     //  Set the initial config.
     this.config = {
@@ -35,7 +35,7 @@ function Game(isHost, options, socketService, peerService, hostService) {
         pointsPerInvader: 5,
         isHost,
         options,
-        socketService,
+        backendService,
         peerService,
         hostService
     };
@@ -104,14 +104,14 @@ Game.prototype.moveToState = function(state) {
 Game.prototype.start = function() {
     if (this.config.isHost) {
       let hostService = this.config.hostService;
-      let socketService = this.config.socketService;
+      let backendService = this.config.backendService;
 
       hostService.hostGame(this.config.options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
-        socketService.answer(username, data);
+        backendService.answer(username, data);
       });
 
-      socketService.onJoinGame(function(msg) {
+      backendService.onJoinGame(function(msg) {
         hostService.joinGameReceived(msg);
       });
 

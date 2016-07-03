@@ -16,9 +16,9 @@
     }
   }
 
-  controller.$inject = ['socketService', '$scope', 'peerService', '$rootScope'];
+  controller.$inject = ['backendService', '$scope', 'peerService', '$rootScope'];
 
-  function controller(socketService, $scope, peerService, $rootScope) {
+  function controller(backendService, $scope, peerService, $rootScope) {
     var vm = this;
     vm.startHosting = startHosting;
     vm.hostedGames = [];
@@ -26,7 +26,7 @@
     activate();
 
     function activate() {
-      socketService.getHostedGames();
+      backendService.getHostedGames();
       console.log('activate: ', vm.hostedGames);
     }
 
@@ -45,7 +45,7 @@
       $rootScope.options = options;
 
       console.log('start hosting: ', gameOption, numPlayers);
-      socketService.newGameHost(options);
+      backendService.newGameHost(options);
     }
 
     function joinGame(game) {

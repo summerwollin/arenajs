@@ -25,7 +25,7 @@
     window.game = new Game(
       scope.isHost,
       scope.options,
-      scope.socketService,
+      scope.backendService,
       scope.peerService,
       scope.hostService
     );
@@ -64,13 +64,13 @@
   }
 
 
-  controller.$inject = ['$scope', '$rootScope', '$location', 'peerService', 'hostService', 'socketService'];
+  controller.$inject = ['$scope', '$rootScope', '$location', 'peerService', 'hostService', 'backendService'];
 
-  function controller($scope, $rootScope, $location, peerService, hostService, socketService) {
+  function controller($scope, $rootScope, $location, peerService, hostService, backendService) {
     var vm = this;
     $scope.peerService = peerService;
     $scope.hostService = hostService;
-    $scope.socketService = socketService;
+    $scope.backendService = backendService;
   }
 
 

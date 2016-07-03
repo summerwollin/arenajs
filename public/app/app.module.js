@@ -167,11 +167,11 @@
     .when('/', {
       template: '<aj-main></aj-main>',
       resolve: {
-        startAuth: function (socketService, $location) {
+        startAuth: function (backendService, $location) {
           console.log('startAuthorization /');
-          socketService.startAuthorization()
+          backendService.startAuthorization()
           .then(function (response) {
-            socketService.removeGameSessions();
+            backendService.removeGameSessions();
             console.log('startAuth response: ', response);
             $location.path('/lobby');
           })
@@ -184,11 +184,11 @@
     .when('/lobby', {
       template: '<aj-lobby></aj-lobby>',
       resolve: {
-        startAuth: function (socketService, $location) {
+        startAuth: function (backendService, $location) {
           console.log('startAuthorization /lobby');
-          socketService.startAuthorization()
+          backendService.startAuthorization()
           .then(function (response) {
-            socketService.removeGameSessions();
+            backendService.removeGameSessions();
             console.log('startAuth response: ', response);
           })
           .catch(function (er) {

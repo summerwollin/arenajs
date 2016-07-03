@@ -5,9 +5,9 @@
     .factory('peerService', factory);
 
 
-  factory.$inject = ['socketService'];
+  factory.$inject = ['backendService'];
 
-  function factory (socketService) {
+  function factory (backendService) {
 
     var dataChannel;
     var hasReceivedAnswer = false;
@@ -21,7 +21,7 @@
       dataChannel = new SimplePeer({initiator: true, trickle: false});
       dataChannel.on('signal', function(data) {
         // Send join-game message to server here
-        socketService.joinGame({gameInfo: game, sdp: data, senderUsername: socketService.getMyUsername()});
+        backendService.joinGame({gameInfo: game, sdp: data, senderUsername: backendService.getMyUsername()});
       });
       dataChannel.on('connect', function() {
         console.log('peerService [dataChannel.onConnect]')
@@ -39,7 +39,7 @@
         let msg = JSON.parse(data);
         console.log('peerService [dataChannel.onData]', msg)
       })
-      socketService.onAnswer(function(msg) {
+      backendService.onAnswer(function(msg) {
         console.log("peerService [answering]", msg)
         if(!hasReceivedAnswer) {
           // Send an answer only once

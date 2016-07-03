@@ -17,15 +17,15 @@
   }
 
 
-  controller.$inject = ['socketService', '$scope'];
+  controller.$inject = ['backendService', '$scope'];
 
-  function controller(socketService, $scope) {
+  function controller(backendService, $scope) {
     let vm = this;
     vm.users = [];
     activate();
 
     function activate() {
-      socketService.getUsers();
+      backendService.getUsers();
     }
 
     $scope.$on('got-users', function (event, data) {
