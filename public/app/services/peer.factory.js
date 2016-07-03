@@ -5,15 +5,17 @@
     .factory('peerService', factory);
 
 
-  factory.$inject = ['backendService'];
+  factory.$inject = [];
 
-  function factory (backendService) {
+  function factory () {
 
     var dataChannel;
     var hasReceivedAnswer = false;
+    var signallingInfoAvailableCallback = null;
 
     return {
-      joinGame
+      joinGame,
+      onSignallingInfoAvailable
     };
 
     function joinGame(game) {
@@ -21,7 +23,9 @@
       dataChannel = new SimplePeer({initiator: true, trickle: false});
       dataChannel.on('signal', function(data) {
         // Send join-game message to server here
-        backendService.joinGame({gameInfo: game, sdp: data, senderUsername: backendService.getMyUsername()});
+        if (signallingInfoAvailableCallback) {
+          signallingInfoAvailableCallback(data);
+        }
       });
       dataChannel.on('connect', function() {
         console.log('peerService [dataChannel.onConnect]')
@@ -47,6 +51,9 @@
           hasReceivedAnswer = true;
         }
       });
+    }
+    function onSignallingInfoAvailable(callback) {
+      signallingInfoAvailableCallback  = callback;
     }
 
 

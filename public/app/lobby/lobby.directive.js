@@ -54,6 +54,11 @@
       $rootScope.isHost = false;
       $rootScope.options = game;
 
+      peerService.onSignallingInfoAvailable(function(data) {
+        // Send join-game message to server here
+        backendService.joinGame({gameInfo: game, sdp: data, senderUsername: backendService.getMyUsername()});
+      });
+
       peerService.joinGame(game);
     }
 
