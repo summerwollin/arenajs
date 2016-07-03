@@ -4,9 +4,6 @@
   angular.module('arenaApp')
     .factory('peerService', factory);
 
-
-  factory.$inject = [];
-
   function factory () {
 
     var dataChannel;
@@ -15,7 +12,8 @@
 
     return {
       joinGame,
-      onSignallingInfoAvailable
+      onSignallingInfoAvailable,
+      answerReceived
     };
 
     function joinGame(game) {
@@ -42,18 +40,19 @@
       dataChannel.on('data', function(data) {
         let msg = JSON.parse(data);
         console.log('peerService [dataChannel.onData]', msg)
-      })
-      backendService.onAnswer(function(msg) {
-        console.log("peerService [answering]", msg)
-        if(!hasReceivedAnswer) {
-          // Send an answer only once
-          dataChannel.signal(msg.sdp)
-          hasReceivedAnswer = true;
-        }
       });
     }
+
     function onSignallingInfoAvailable(callback) {
       signallingInfoAvailableCallback  = callback;
+    }
+
+    function answerReceived(msg) {
+      if(!hasReceivedAnswer) {
+        // Send an answer only once
+        dataChannel.signal(msg.sdp)
+        hasReceivedAnswer = true;
+      }
     }
 
 

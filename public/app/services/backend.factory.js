@@ -112,8 +112,11 @@
         })
 
         socket.on('answer', function (msg) {
+          console.log('backendService [answer]', msg);
           if(onAnswerCallback) {
             onAnswerCallback(msg);
+          } else {
+            console.log('received answer without callback present', msg);
           }
         })
 

@@ -59,6 +59,10 @@
         backendService.joinGame({gameInfo: game, sdp: data, senderUsername: backendService.getMyUsername()});
       });
 
+      backendService.onAnswer(function(msg) {
+        peerService.answerReceived(msg);
+      });
+
       peerService.joinGame(game);
     }
 
