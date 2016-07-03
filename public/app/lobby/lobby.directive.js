@@ -65,6 +65,8 @@
 
       peerService.onConnect(function () {
         console.log('lobby onConnect');
+        $rootScope.isHost = false;
+        $rootScope.options = game.gameOptions;
       });
 
       peerService.joinGame(game);

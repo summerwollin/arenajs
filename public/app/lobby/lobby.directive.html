@@ -3,7 +3,7 @@
     <h1>Lobby</h1>
     <h3>Current Games:</h3>
     <div ng-repeat="game in vm.hostedGames track by $index">
-      <h4 ng-click="vm.joinGame(game)" class="lobby-join">{{game.gameOptions.game}}, {{game.gameOptions.numPlayers}} Players, - hosted by: {{game.hostUser}}</h4>
+      <a ng-href={{game.gameOptions.game}}><h4 ng-click="vm.joinGame(game)" class="lobby-join">{{game.gameOptions.game}}, {{game.gameOptions.numPlayers}} Players, - hosted by: {{game.hostUser}}</h4></a>
     </div>
     <button ng-click="vm.hostGame = !vm.hostGame" class="btn btn-default" type="button" name="button">Host Game</button>
   </div>
