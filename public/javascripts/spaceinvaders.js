@@ -115,6 +115,8 @@ Game.prototype.start = function() {
         hostService.joinGameReceived(msg);
       });
 
+      this.moveToState(new WelcomeState(this));
+
     } else {
       console.log('Game.prototype.start [else]');
       let peerService = this.config.peerService;
@@ -124,10 +126,9 @@ Game.prototype.start = function() {
             game.currentState().receiveHostMessage(game, msg);
         }
       })
+      this.moveToState(new GhostedLevelIntroState());
     }
-    //  Move into the 'welcome' state.
-    this.moveToState(new WelcomeState(this));
-
+    
     //  Set the game variables.
     this.lives = 3;
     this.config.debugMode = /debug=true/.test(window.location.href);
@@ -642,8 +643,16 @@ LevelIntroState.prototype.update = function(game, dt) {
     if (this.countdown <= 0) {
         //  Move to the next level, popping this state.
         game.moveToState(new PlayState(game.config, this.level));
+        game.config.hostService.sendBroadcastMessage({
+          type: 'li-switchToPlay'
+        })
+    } else {
+      game.config.hostService.sendBroadcastMessage({
+        type: 'li-countdownUpdate',
+        countdownMessage: this.countdownMessage,
+        level: this.level
+      });
     }
-
 };
 
 LevelIntroState.prototype.draw = function(game, dt, ctx) {
@@ -661,6 +670,19 @@ LevelIntroState.prototype.draw = function(game, dt, ctx) {
     return;
 };
 
+function GhostedLevelIntroState(level) {
+  this.countdownMessage = 3;
+  this.level = level;
+}
+
+GhostedLevelIntroState.prototype.receiveHostMessage = function (game, msg) {
+  if (msg.type === 'li-countdownUpdate') {
+    this.countdownMessage = msg.countdownMessage;
+    this.level = msg.level;
+  }
+}
+
+GhostedLevelIntroState.prototype.draw = LevelIntroState.prototype.draw;
 
 /*
 
