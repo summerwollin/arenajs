@@ -128,7 +128,7 @@ Game.prototype.start = function() {
       })
       this.moveToState(new GhostedLevelIntroState());
     }
-    
+
     //  Set the game variables.
     this.lives = 3;
     this.config.debugMode = /debug=true/.test(window.location.href);
@@ -535,6 +535,14 @@ PlayState.prototype.update = function(game, dt) {
         game.moveToState(new LevelIntroState(game.level));
     }
 
+    game.config.hostService.sendBroadcastMessage({
+      type: "p-state",
+      invaders: this.invaders,
+      bombs: this.bombs,
+      rockets: this.rockets,
+      ship: this.ship
+    })
+
 };
 
 PlayState.prototype.draw = function(game, dt, ctx) {
@@ -594,11 +602,6 @@ PlayState.prototype.keyDown = function(game, keyCode) {
         //  Fire!
         this.fireRocket();
     }
-
-    if(game.config.isHost) {
-      game.config.hostService.sendBroadcastMessage({type: 'hostKeydown', keyCode});
-    }
-
 };
 
 PlayState.prototype.keyUp = function(game, keyCode) {
@@ -615,6 +618,20 @@ PlayState.prototype.fireRocket = function() {
     }
 };
 
+function GhostedPlayState() {
+
+}
+
+GhostedPlayState.prototype.receiveHostMessage = function(game, msg) {
+  if (msg.type === 'p-state') {
+    this.invaders = msg.invaders;
+    this.bombs = msg.bombs;
+    this.rockets = msg.rockets;
+    this.ship = msg.ship;
+  }
+}
+
+GhostedPlayState.prototype.draw = PlayState.prototype.draw;
 /*
     Level Intro State
 
@@ -679,6 +696,9 @@ GhostedLevelIntroState.prototype.receiveHostMessage = function (game, msg) {
   if (msg.type === 'li-countdownUpdate') {
     this.countdownMessage = msg.countdownMessage;
     this.level = msg.level;
+  }
+  else if (msg.type === 'li-switchToPlay') {
+    game.moveToState(new GhostedPlayState());
   }
 }
 
