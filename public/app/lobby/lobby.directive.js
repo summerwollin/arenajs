@@ -63,6 +63,10 @@
         peerService.answerReceived(msg);
       });
 
+      peerService.onConnect(function () {
+        console.log('lobby onConnect');
+      });
+
       peerService.joinGame(game);
     }
 

@@ -9,11 +9,13 @@
     var dataChannel;
     var hasReceivedAnswer = false;
     var signallingInfoAvailableCallback = null;
+    var connectCallback = null;
 
     return {
       joinGame,
       onSignallingInfoAvailable,
-      answerReceived
+      answerReceived,
+      onConnect
     };
 
     function joinGame(game) {
@@ -28,6 +30,9 @@
       dataChannel.on('connect', function() {
         console.log('peerService [dataChannel.onConnect]')
         // We're connected to the host here
+        if (connectCallback) {
+          connectCallback();
+        }
       });
       dataChannel.on('close', function() {
         console.log('peerService [dataChannel.onClose]');
@@ -53,6 +58,10 @@
         dataChannel.signal(msg.sdp)
         hasReceivedAnswer = true;
       }
+    }
+
+    function onConnect(callback) {
+      connectCallback = callback;
     }
 
 
