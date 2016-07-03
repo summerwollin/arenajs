@@ -118,8 +118,11 @@ Game.prototype.start = function() {
     } else {
       console.log('Game.prototype.start [else]');
       let peerService = this.config.peerService;
+      let game = this;
       peerService.onDataReceived(function (msg) {
-        console.log('Game.prototype.start [onDataReceived]', msg);
+        if (game.currentState() && game.currentState().receiveHostMessage) {
+            game.currentState().receiveHostMessage(game, msg);
+        }
       })
     }
     //  Move into the 'welcome' state.
@@ -201,6 +204,10 @@ WelcomeState.prototype.update = function(game, dt) {
 
 
 };
+
+WelcomeState.prototype.receiveHostMessage = function (game, msg) {
+  console.log('WelcomeState.receiveHostMessage', msg);
+}
 
 WelcomeState.prototype.draw = function(game, dt, ctx) {
 
