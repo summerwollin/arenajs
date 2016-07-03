@@ -115,6 +115,12 @@ Game.prototype.start = function() {
         hostService.joinGameReceived(msg);
       });
 
+    } else {
+      console.log('Game.prototype.start [else]');
+      let peerService = this.config.peerService;
+      peerService.onDataReceived(function (msg) {
+        console.log('Game.prototype.start [onDataReceived]', msg);
+      })
     }
     //  Move into the 'welcome' state.
     this.moveToState(new WelcomeState(this));

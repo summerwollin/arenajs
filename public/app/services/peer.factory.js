@@ -10,12 +10,14 @@
     var hasReceivedAnswer = false;
     var signallingInfoAvailableCallback = null;
     var connectCallback = null;
+    var dataReceivedCallback = null;
 
     return {
       joinGame,
       onSignallingInfoAvailable,
       answerReceived,
-      onConnect
+      onConnect,
+      onDataReceived
     };
 
     function joinGame(game) {
@@ -45,6 +47,9 @@
       dataChannel.on('data', function(data) {
         let msg = JSON.parse(data);
         console.log('peerService [dataChannel.onData]', msg)
+        if (dataReceivedCallback) {
+          dataReceivedCallback(msg);
+        }
       });
     }
 
@@ -62,6 +67,10 @@
 
     function onConnect(callback) {
       connectCallback = callback;
+    }
+
+    function onDataReceived(callback) {
+      dataReceivedCallback = callback;
     }
 
 

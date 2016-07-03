@@ -80,6 +80,7 @@
 
     function sendBroadcastMessage(msg) {
       peers.forEach(function(peer) {
+        console.log('hostService [sendBroadcastMessage]');
         peer.dataChannel.send(JSON.stringify(msg));
       })
     }
