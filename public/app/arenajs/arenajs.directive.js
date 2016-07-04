@@ -26,15 +26,34 @@
     var playerPosition = document.getElementById('playerPosition');
 
 
-    main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenBtn, mobileFullscreenBtn, playerPosition)
+    main(
+      viewportFrame,
+      viewport,
+      webglError,
+      viewportInfo,
+      showFPS,
+      vrToggle,
+      mobileVrBtn,
+      fullscreenBtn,
+      mobileFullscreenBtn,
+      playerPosition,
+      scope.isHost,
+      scope.options,
+      scope.backendService,
+      scope.peerService,
+      scope.hostService
+    )
 
   }
 
 
-  controller.$inject = [];
+  controller.$inject = ['$scope', 'peerService', 'hostService', 'backendService'];
 
-  function controller() {
+  function controller($scope, peerService, hostService, backendService) {
     var vm = this;
+    $scope.peerService = peerService;
+    $scope.hostService = hostService;
+    $scope.backendService = backendService;
   }
 
 

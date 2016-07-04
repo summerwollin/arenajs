@@ -601,7 +601,33 @@ function renderLoop(gl, element, stats, playerPosition) {
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition) {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService) {
+
+    if (isHost) {
+
+      hostService.hostGame(options.numPlayers);
+      hostService.onSignallingReady(function(data, username) {
+        backendService.answer(username, data);
+      });
+
+      backendService.onJoinGame(function(msg) {
+        hostService.joinGameReceived(msg);
+      });
+
+      hostService.onAllPeersConnected(function() {
+        console.log('arenajs [onAllPeersConnected]');
+        hostService.sendBroadcastMessage({type: 'overall-allClear'});
+      })
+
+      //this.moveToState(new WelcomeState(this));
+
+    } else {
+      let game = this;
+      peerService.onDataReceived(function (msg) {
+        console.log('received RTC message', msg);
+      })
+      //this.moveToState(new GhostedLevelIntroState());
+    }
 
     var stats = new Stats();
     viewportFrame.appendChild( stats.domElement );
