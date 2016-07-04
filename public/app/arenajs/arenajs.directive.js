@@ -2,11 +2,11 @@
   'use strict';
 
   angular.module('arenaApp')
-    .directive('ajQ3gl', q3glDirective);
+    .directive('ajArenajs', arenajsDirective);
 
-  function q3glDirective () {
+  function arenajsDirective () {
     return {
-      templateUrl: 'app/q3gl/q3gl.directive.html',
+      templateUrl: 'app/arenajs/arenajs.directive.html',
       controller: controller,
       controllerAs: 'vm',
       link: link

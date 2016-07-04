@@ -204,8 +204,8 @@
     .when('/webgl', {
       template: '<aj-webgl></aj-webgl>'
     })
-    .when('/q3gl', {
-      template: '<aj-q3gl></aj-q3gl>'
+    .when('/arenajs', {
+      template: '<aj-arenajs></aj-arenajs>'
     });
 
     $locationProvider.html5Mode(true);
