@@ -14,7 +14,17 @@
   }
 
   function link(scope, element, attributes) {
+    var viewportFrame = document.getElementById('viewport-frame');
+    var viewport = document.getElementById('viewport');
+    var webglError = document.getElementById('webgl-error');
+    var viewportInfo = document.getElementById('viewport-info');
+    var showFPS = document.getElementById('showFPS');
+    var vrToggle = document.getElementById('vrToggle');
+    var mobileVrBtn = document.getElementById('mobileVrBtn');
+    var fullscreenBtn = document.getElementById('fullscreenBtn');
+    var mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
 
+    main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenBtn, mobileFullscreenBtn)
 
   }
 

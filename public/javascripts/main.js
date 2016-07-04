@@ -599,11 +599,11 @@ function renderLoop(gl, element, stats) {
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main() {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn) {
     var stats = new Stats();
-    document.getElementById("viewport-frame").appendChild( stats.domElement );
+    viewportFrame.appendChild( stats.domElement );
 
-    var canvas = document.getElementById("viewport");
+    var canvas = viewport;
 
     // Get the GL Context (try 'webgl' first, then fallback)
     var gl = getAvailableContext(canvas, ['webgl', 'experimental-webgl']);
@@ -634,10 +634,10 @@ function main() {
     }
 
     if(!gl) {
-        document.getElementById('viewport-frame').style.display = 'none';
-        document.getElementById('webgl-error').style.display = 'block';
+        viewportFrame.style.display = 'none';
+        webglError.style.display = 'block';
     } else {
-        document.getElementById('viewport-info').style.display = 'block';
+        viewportInfo.style.display = 'block';
         initEvents();
         initGL(gl, canvas);
         renderLoop(gl, canvas, stats);
@@ -646,7 +646,6 @@ function main() {
     onResize();
     window.addEventListener("resize", onResize, false);
 
-    var showFPS = document.getElementById("showFPS");
     showFPS.addEventListener("change", function() {
         stats.domElement.style.display = showFPS.checked ? "block" : "none";
     });
@@ -655,9 +654,7 @@ function main() {
       if (displays.length > 0) {
         vrDisplay = displays[0];
 
-        var vrToggle = document.getElementById("vrToggle");
         vrToggle.style.display = "block";
-        var mobileVrBtn = document.getElementById("mobileVrBtn");
         mobileVrBtn.style.display = "block";
 
         // Handle VR presentation change
@@ -679,8 +676,6 @@ function main() {
     });*/
 
     // Handle fullscreen transition
-    var viewportFrame = document.getElementById("viewport-frame");
-    var viewport = document.getElementById("viewport");
     document.addEventListener("fullscreenchange", function() {
         if(document.fullscreenElement) {
             viewport.requestPointerLock(); // Attempt to lock the mouse automatically on fullscreen
@@ -692,8 +687,6 @@ function main() {
     function goFullscreen() {
         viewportFrame.requestFullScreen();
     }
-    var fullscreenButton = document.getElementById('fullscreenBtn');
-    var mobileFullscreenBtn = document.getElementById("mobileFullscreenBtn");
     fullscreenButton.addEventListener('click', goFullscreen, false);
     mobileFullscreenBtn.addEventListener('click', goFullscreen, false);
 
@@ -706,10 +699,8 @@ function main() {
         vrDisplay.requestPresent({ source: viewport });
       }
     }
-    var vrBtn = document.getElementById("vrBtn");
-    var mobileVrBtn = document.getElementById("mobileVrBtn");
-    vrBtn.addEventListener("click", presentVR, false);
-    mobileVrBtn.addEventListener("click", presentVR, false);
+    //vrBtn.addEventListener("click", presentVR, false);
+  //  mobileVrBtn.addEventListener("click", presentVR, false);
 
 }
-window.addEventListener("load", main); // Fire this once the page is loaded up
+//window.addEventListener("load", main); // Fire this once the page is loaded up
