@@ -23,8 +23,10 @@
     var mobileVrBtn = document.getElementById('mobileVrBtn');
     var fullscreenBtn = document.getElementById('fullscreenBtn');
     var mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
+    var playerPosition = document.getElementById('playerPosition');
 
-    main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenBtn, mobileFullscreenBtn)
+
+    main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenBtn, mobileFullscreenBtn, playerPosition)
 
   }
 

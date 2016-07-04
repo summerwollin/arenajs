@@ -210,7 +210,7 @@ function eulerFromQuaternion(out, q, order) {
 
 var lastMove = 0;
 
-function onFrame(gl, event) {
+function onFrame(gl, event, playerPosition) {
     if(!map || !playerMover) { return; }
 
     // Update player movement @ 60hz
@@ -222,7 +222,7 @@ function onFrame(gl, event) {
 
     // For great laggage!
     for (var i = 0; i < REPEAT_FRAMES; ++i)
-      drawFrame(gl);
+      drawFrame(gl, playerPosition);
 }
 
 var poseMatrix = mat4.create();
@@ -261,7 +261,9 @@ function getViewMatrix(out, pose, eye) {
 }
 
 // Draw a single frame
-function drawFrame(gl) {
+function drawFrame(gl, playerPosition) {
+    playerPosition.innerHTML = playerMover.position;
+
     // Clear back buffer but not color buffer (we expect the entire scene to be overwritten)
     gl.depthMask(true);
     gl.clear(gl.DEPTH_BUFFER_BIT);
@@ -570,7 +572,7 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
-function renderLoop(gl, element, stats) {
+function renderLoop(gl, element, stats, playerPosition) {
     var startTime = new Date().getTime();
     var lastTimestamp = startTime;
     var lastFps = startTime;
@@ -592,14 +594,15 @@ function renderLoop(gl, element, stats) {
             timestamp: timestamp,
             elapsed: timestamp - startTime,
             frameTime: timestamp - lastTimestamp
-        });
+        }, playerPosition);
 
         stats.end();
     }
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn) {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition) {
+
     var stats = new Stats();
     viewportFrame.appendChild( stats.domElement );
 
@@ -640,7 +643,7 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
         viewportInfo.style.display = 'block';
         initEvents();
         initGL(gl, canvas);
-        renderLoop(gl, canvas, stats);
+        renderLoop(gl, canvas, stats, playerPosition);
     }
 
     onResize();
