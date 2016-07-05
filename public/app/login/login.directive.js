@@ -32,7 +32,7 @@
     function login() {
       return $http.post('login', {username: vm.form.login.username, password: vm.form.login.password})
       .then(function (response) {
-        console.log('set token');
+        console.log('login success, set token');
         backendService.setToken(response.data.token);
       })
     }
@@ -41,7 +41,8 @@
       console.log('fn signup');
       return $http.post('signup', {username: vm.form.signup.username, password: vm.form.signup.password})
       .then(function (response) {
-        console.log('signup response!!!', response);
+        console.log('signup success, set token');
+        backendService.setToken(response.data.token);
      })
     }
 

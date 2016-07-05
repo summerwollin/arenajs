@@ -23,16 +23,16 @@ router.post('/login', function(req, res, next) {
 })
 
 router.post('/signup', function(req, res, next) {
-  // const errors = [];
-  //
-  // if (!req.body.username || !req.body.username.trim()) errors.push("Username can't be blank");
-  // if (!req.body.password || !req.body.password.trim()) errors.push("Password can't be blank");
-  //
-  // if (errors.length) {
-  //   res.status(422).json({
-  //     errors: errors
-  //   })
-  //} else {
+  const errors = [];
+
+  if (!req.body.username || !req.body.username.trim()) errors.push("Username can't be blank");
+  if (!req.body.password || !req.body.password.trim()) errors.push("Password can't be blank");
+
+  if (errors.length) {
+    res.status(422).json({
+      errors: errors
+    })
+  } else {
     knex('users')
       .whereRaw('lower(username) = ?', req.body.username.toLowerCase())
       .count()
@@ -59,10 +59,12 @@ router.post('/signup', function(req, res, next) {
           })
 
         } else {
-          res.status(422)
+          res.status(422).json({
+            error: "username taken"
+          })
         }
       })
-  //  }
+    }
 })
 
 
