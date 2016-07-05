@@ -72,6 +72,8 @@ var vrDrawMode = 0;
 var SKIP_FRAMES = 0;
 var REPEAT_FRAMES = 1;
 
+var demo_obj = null;
+
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
 }
@@ -104,6 +106,8 @@ function initGL(gl, canvas) {
 
     leftViewport = { x: 0, y: 0, width: 0, height: 0 };
     rightViewport = { x: 0, y: 0, width: 0, height: 0 };
+
+    demo_obj = new cube(gl);
 
     initMap(gl);
 }
@@ -276,6 +280,7 @@ function drawFrame(gl, playerPosition) {
 
       // Here's where all the magic happens...
       map.draw(leftViewMat, leftProjMat);
+      demo_obj.draw(leftViewMat, leftProjMat);
     } else if (vrDrawMode == 1) {
       var canvas = document.getElementById("viewport");
       leftViewport.width = canvas.width / 2.0;
