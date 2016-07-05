@@ -23,6 +23,7 @@
     let vm = this;
     vm.login = login;
     vm.signup = signup;
+    vm.guest = guest;
     backendService.onStateChange(onServerStateChange);
 
     $scope.$on("$destroy", function () {
@@ -44,6 +45,14 @@
         console.log('signup success, set token');
         backendService.setToken(response.data.token);
      })
+    }
+
+    function guest() {
+      return $http.post('guest')
+      .then(function (response) {
+        console.log('guest success, set token');
+        backendService.setToken(response.data.token);
+      })
     }
 
     function onServerStateChange(newState) {

@@ -97,5 +97,15 @@ router.post('/signup', function(req, res, next) {
     }
 })
 
+router.post('/guest', function(req, res, next) {
+  var token = jwt.sign('guest', 'shhhhhhhhh');
+  res.json({
+    success: true,
+    message: 'Enjoy your token!',
+    token: token
+  });
+
+})
+
 
 module.exports = router;
