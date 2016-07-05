@@ -74,7 +74,6 @@
     }
 
     function onAllPeersConnected(callback) {
-      allPeersConnected = true;
       console.log("onPeersConnected", callback);
       allPeersConnectedCallback = callback;
     }

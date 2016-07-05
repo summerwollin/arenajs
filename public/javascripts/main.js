@@ -76,6 +76,10 @@ var demo_obj = null;
 
 var allPeersConnected = false;
 
+var hostPositionData = [0,0,0];
+
+var hostAngleData;
+
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
 }
@@ -274,7 +278,8 @@ function drawFrame(gl, playerPosition, hostService) {
     if (allPeersConnected) {
       hostService.sendBroadcastMessage({
         type: "p-position",
-        position: playerMover.position
+        position: playerMover.position,
+        zAngle: zAngle
       })
     }
 
@@ -290,7 +295,7 @@ function drawFrame(gl, playerPosition, hostService) {
 
       // Here's where all the magic happens...
       map.draw(leftViewMat, leftProjMat);
-      demo_obj.draw(leftViewMat, leftProjMat);
+      demo_obj.draw(leftViewMat, leftProjMat, hostPositionData, hostAngleData);
     } else if (vrDrawMode == 1) {
       var canvas = document.getElementById("viewport");
       leftViewport.width = canvas.width / 2.0;
@@ -616,7 +621,7 @@ function renderLoop(gl, element, stats, playerPosition, hostService) {
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition) {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition, hostAngle) {
 
     if (isHost) {
 
@@ -631,6 +636,7 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
 
       hostService.onAllPeersConnected(function() {
         console.log('arenajs [onAllPeersConnected]');
+        allPeersConnected = true;
         hostService.sendBroadcastMessage({type: 'overall-allClear'});
       })
 
@@ -640,6 +646,9 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
       let game = this;
       peerService.onDataReceived(function (msg) {
         hostPosition.innerHTML = msg.position;
+        hostAngle.innerHTML = msg.zAngle;
+        hostPositionData = msg.position;
+        hostAngleData = msg.zAngle;
         //console.log('received RTC message', msg);
       })
       //this.moveToState(new GhostedLevelIntroState());

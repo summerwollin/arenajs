@@ -25,6 +25,7 @@
     var mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
     var playerPosition = document.getElementById('playerPosition');
     var hostPosition = document.getElementById('hostPosition');
+    var hostAngle = document.getElementById('hostAngle');
 
 
     main(
@@ -43,7 +44,8 @@
       scope.backendService,
       scope.peerService,
       scope.hostService,
-      hostPosition
+      hostPosition,
+      hostAngle
     )
 
   }

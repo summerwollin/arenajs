@@ -191,14 +191,14 @@ function linkProgram(gl, vertexShader, fragmentShader) {
   return program;
 }
 
-cube.prototype.draw = function(viewMatrix, projMatrix) {
+cube.prototype.draw = function(viewMatrix, projMatrix, pos, zAngle) {
   var gl = this.gl;
 
   gl.useProgram(this.webglProgram);
 
   var modelMatrix = mat4.create();
-  var pos = vec3.fromValues(-120, 0, 0);
   mat4.translate(modelMatrix, modelMatrix, pos);
+  mat4.rotateZ(modelMatrix, modelMatrix, zAngle);
 
   var modelViewMatrix = mat4.create();
 
