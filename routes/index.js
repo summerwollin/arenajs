@@ -11,15 +11,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-  // usernames.push(req.body.username);
-  // console.log('all names: ', usernames);
-  // var token = jwt.sign(req.body.username, 'shhhhhhhhh');
-  // console.log('mytoken: ', token);
-  // res.json({
-  //   success: true,
-  //   message: 'Enjoy your token!',
-  //   token: token
-  // });
+
   const errors = [];
 
     if (!req.body.username || !req.body.username.trim()) errors.push("Username can't be blank");
