@@ -196,7 +196,15 @@ cube.prototype.draw = function(viewMatrix, projMatrix) {
 
   gl.useProgram(this.webglProgram);
 
-  gl.uniformMatrix4fv(this.locations.modelView, false, viewMatrix);
+  var modelMatrix = mat4.create();
+  var pos = vec3.fromValues(-120, 0, 0);
+  mat4.translate(modelMatrix, modelMatrix, pos);
+
+  var modelViewMatrix = mat4.create();
+
+  mat4.multiply(modelViewMatrix, viewMatrix, modelMatrix);
+
+  gl.uniformMatrix4fv(this.locations.modelView, false, modelViewMatrix);
   gl.uniformMatrix4fv(this.locations.projection, false, projMatrix);
 
   // Set the positions attribute
