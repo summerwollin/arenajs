@@ -3,7 +3,22 @@
     <div class="form-group">
       <label for="username">Username:</label>
       <input ng-model="vm.form.login.username" type="text" name="username" class="username-input" value="">
+      <br>
+      <label for="password">Password:</label>
+      <input ng-model="vm.form.login.password" type="text" name="password" class="username-input" value="">
     </div>
     <button ng-click="vm.loginSubmit()" class="btn btn-default" type="submit" id="submit-username">Login</button>
+  </form>
+  <br>
+  <br>
+  <form name="signupForm" novalidate ng-submit="signupForm.$valid && vm.signup()">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input ng-model="vm.form.signup.username" type="text" name="username" class="username-input" value="">
+      <br>
+      <label for="password">Password:</label>
+      <input ng-model="vm.form.signup.password" type="text" name="password" class="username-input" value="">
+    </div>
+    <button class="btn btn-default" type="submit">Sign Up</button>
   </form>
 </div>

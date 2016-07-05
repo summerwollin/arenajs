@@ -22,6 +22,7 @@
   function controller($http, $window, $location, backendService, $scope) {
     let vm = this;
     vm.login = login;
+    vm.signup = signup;
     backendService.onStateChange(onServerStateChange);
 
     $scope.$on("$destroy", function () {
@@ -29,11 +30,19 @@
     });
 
     function login() {
-      return $http.post('login', {username: vm.form.login.username})
+      return $http.post('login', {username: vm.form.login.username, password: vm.form.login.password})
       .then(function (response) {
         console.log('set token');
         backendService.setToken(response.data.token);
       })
+    }
+
+    function signup() {
+      console.log('fn signup');
+      return $http.post('signup', {username: vm.form.signup.username, password: vm.form.signup.password})
+      .then(function (response) {
+        console.log('signup response!!!', response);
+     })
     }
 
     function onServerStateChange(newState) {
