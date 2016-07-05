@@ -74,13 +74,14 @@
     }
 
     function onAllPeersConnected(callback) {
+      allPeersConnected = true;
       console.log("onPeersConnected", callback);
       allPeersConnectedCallback = callback;
     }
 
     function sendBroadcastMessage(msg) {
       peers.forEach(function(peer) {
-        console.log('hostService [sendBroadcastMessage]');
+        //console.log('hostService [sendBroadcastMessage]');
         peer.dataChannel.send(JSON.stringify(msg));
       })
     }

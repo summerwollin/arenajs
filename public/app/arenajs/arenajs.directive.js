@@ -24,6 +24,7 @@
     var fullscreenBtn = document.getElementById('fullscreenBtn');
     var mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
     var playerPosition = document.getElementById('playerPosition');
+    var hostPosition = document.getElementById('hostPosition');
 
 
     main(
@@ -41,7 +42,8 @@
       scope.options,
       scope.backendService,
       scope.peerService,
-      scope.hostService
+      scope.hostService,
+      hostPosition
     )
 
   }

@@ -46,7 +46,7 @@
       });
       dataChannel.on('data', function(data) {
         let msg = JSON.parse(data);
-        console.log('peerService [dataChannel.onData]', msg)
+        //console.log('peerService [dataChannel.onData]', msg)
         if (dataReceivedCallback) {
           dataReceivedCallback(msg);
         }

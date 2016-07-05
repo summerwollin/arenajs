@@ -74,6 +74,8 @@ var REPEAT_FRAMES = 1;
 
 var demo_obj = null;
 
+var allPeersConnected = false;
+
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
 }
@@ -214,7 +216,7 @@ function eulerFromQuaternion(out, q, order) {
 
 var lastMove = 0;
 
-function onFrame(gl, event, playerPosition) {
+function onFrame(gl, event, playerPosition, hostService) {
     if(!map || !playerMover) { return; }
 
     // Update player movement @ 60hz
@@ -226,7 +228,7 @@ function onFrame(gl, event, playerPosition) {
 
     // For great laggage!
     for (var i = 0; i < REPEAT_FRAMES; ++i)
-      drawFrame(gl, playerPosition);
+      drawFrame(gl, playerPosition, hostService);
 }
 
 var poseMatrix = mat4.create();
@@ -265,8 +267,16 @@ function getViewMatrix(out, pose, eye) {
 }
 
 // Draw a single frame
-function drawFrame(gl, playerPosition) {
+function drawFrame(gl, playerPosition, hostService) {
     playerPosition.innerHTML = playerMover.position;
+
+
+    if (allPeersConnected) {
+      hostService.sendBroadcastMessage({
+        type: "p-position",
+        position: playerMover.position
+      })
+    }
 
     // Clear back buffer but not color buffer (we expect the entire scene to be overwritten)
     gl.depthMask(true);
@@ -577,7 +587,7 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
-function renderLoop(gl, element, stats, playerPosition) {
+function renderLoop(gl, element, stats, playerPosition, hostService) {
     var startTime = new Date().getTime();
     var lastTimestamp = startTime;
     var lastFps = startTime;
@@ -599,14 +609,14 @@ function renderLoop(gl, element, stats, playerPosition) {
             timestamp: timestamp,
             elapsed: timestamp - startTime,
             frameTime: timestamp - lastTimestamp
-        }, playerPosition);
+        }, playerPosition, hostService);
 
         stats.end();
     }
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService) {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition) {
 
     if (isHost) {
 
@@ -629,7 +639,8 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
     } else {
       let game = this;
       peerService.onDataReceived(function (msg) {
-        console.log('received RTC message', msg);
+        hostPosition.innerHTML = msg.position;
+        //console.log('received RTC message', msg);
       })
       //this.moveToState(new GhostedLevelIntroState());
     }
@@ -674,7 +685,7 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
         viewportInfo.style.display = 'block';
         initEvents();
         initGL(gl, canvas);
-        renderLoop(gl, canvas, stats, playerPosition);
+        renderLoop(gl, canvas, stats, playerPosition, hostService);
     }
 
     onResize();
