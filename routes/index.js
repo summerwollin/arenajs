@@ -11,15 +11,53 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/login', function(req, res, next) {
-  usernames.push(req.body.username);
-  console.log('all names: ', usernames);
-  var token = jwt.sign(req.body.username, 'shhhhhhhhh');
-  console.log('mytoken: ', token);
-  res.json({
-    success: true,
-    message: 'Enjoy your token!',
-    token: token
-  });
+  // usernames.push(req.body.username);
+  // console.log('all names: ', usernames);
+  // var token = jwt.sign(req.body.username, 'shhhhhhhhh');
+  // console.log('mytoken: ', token);
+  // res.json({
+  //   success: true,
+  //   message: 'Enjoy your token!',
+  //   token: token
+  // });
+  const errors = [];
+
+    if (!req.body.username || !req.body.username.trim()) errors.push("Username can't be blank");
+    if (!req.body.password || !req.body.password.trim()) errors.push("Password can't be blank");
+
+    if (errors.length) {
+      res.status(422).json({
+        errors: errors
+      })
+    } else {
+      knex('users')
+        .whereRaw('lower(username) = ?', req.body.username.toLowerCase())
+        .first()
+        .then(function (thisuser) {
+
+          if (thisuser) {
+
+            if (bcrypt.compareSync(req.body.password, thisuser.password)) {
+              var token = jwt.sign(req.body.username, 'shhhhhhhhh');
+              res.json({
+                success: true,
+                message: 'Enjoy your token!',
+                token: token
+              });
+
+            } else {
+              res.status(422).json({
+                errors: ["Invalid Login"]
+              })
+            }
+
+          } else {
+            res.status(422).json({
+              errors: ["Invalid Login"]
+            })
+          }
+        })
+    }
 })
 
 router.post('/signup', function(req, res, next) {
