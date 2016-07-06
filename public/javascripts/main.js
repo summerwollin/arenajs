@@ -816,7 +816,7 @@ function renderLoop(gl, element, stats, playerLives, hostService, peerService, o
         timestamp = new Date().getTime();
         if (gameOver) {
           console.log('window.location: ', window.location);
-          window.location = 'lobby';
+          //window.location = 'lobby';
         }
 
         window.requestAnimationFrame(onRequestedFrame, element);
