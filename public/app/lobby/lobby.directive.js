@@ -30,11 +30,10 @@
       console.log('activate: ', vm.hostedGames);
     }
 
-    function startHosting(gameOption, numPlayers) {
+    function startHosting() {
 
-      if (numPlayers === undefined) {
-        numPlayers = 2;
-      }
+      let gameOption = 'arenajs';
+      let numPlayers = 2;
 
       let options = {
         game: gameOption,
