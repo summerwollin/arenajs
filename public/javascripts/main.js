@@ -84,7 +84,9 @@ var peerAngleData;
 
 var playerIsHost = false;
 
-var gameState;
+var gameState = {
+  bullets: []
+};
 var gameOver = false;
 
 function isVRPresenting() {
@@ -331,7 +333,8 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
         hostService.sendBroadcastMessage({
           type: "p-state",
           position: playerMover.position,
-          zAngle: zAngle
+          zAngle: zAngle,
+          bullets: gameState.bullets
         })
       }
     } else {
@@ -361,15 +364,6 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
           [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 70],
           peerAngleData,
           20);
-        gameState.bullets.forEach(function(bullet) {
-          console.log("bullet", bullet);
-          demo_obj.draw(
-            leftViewMat,
-            leftProjMat,
-            [bullet.pos[0], bullet.pos[1], bullet.pos[2] + 50],
-            bullet.zAngle,
-            5);
-          });
       } else {
         demo_obj.draw(
           leftViewMat,
@@ -378,6 +372,14 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
           hostAngleData,
           20);
       }
+      gameState.bullets.forEach(function(bullet) {
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [bullet.pos[0], bullet.pos[1], bullet.pos[2] + 50],
+          bullet.zAngle,
+          2);
+        });
     } else if (vrDrawMode == 1) {
       var canvas = document.getElementById("viewport");
       leftViewport.width = canvas.width / 2.0;
@@ -809,6 +811,7 @@ function main(
           hostAngle.innerHTML = msg.zAngle;
           hostPositionData = msg.position;
           hostAngleData = msg.zAngle;
+          gameState = {bullets: msg.bullets};
           allPeersConnected = true;
         } else if(msg.type === 'p-gameOver') {
           gameover(msg.score);
