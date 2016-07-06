@@ -297,6 +297,7 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
           player: 1,
         });
       }
+      // Check bullets for collisions with players
       gameState.bullets.forEach(function(bullet, index) {
         var bulletSphere = {
           pos: bullet.pos,
@@ -323,6 +324,12 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
           gameState.bullets.splice(index, 1);
           return;
         }
+      });
+      // Move remaining bullets
+      gameState.bullets.forEach(function(bullet) {
+        var velocityVector = [0,1,0];
+        vec3.rotateZ(velocityVector, velocityVector, vec3.create(), -bullet.zAngle);
+        vec3.add(bullet.pos, bullet.pos, velocityVector);
       });
     }
 
