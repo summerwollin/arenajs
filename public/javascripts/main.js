@@ -256,6 +256,21 @@ function gameover(scores) {
   //TODO: Disable redraw and goto /lobby
 }
 
+function removeHealthFromPlayer(player, amount, hostService) {
+  player.health -= amount;
+  console.log("player " + player.num + " hit");
+  if(player.health < 0) {
+    if(player.num === 0) {
+      respawnPlayer(-1);
+    }
+    hostService.sendBroadcastMessage({
+      type: "p-playerDied",
+      player: player.num
+    });
+    playerDied(player.num, hostService);
+  }
+}
+
 function onFrame(gl, event, playerPosition, hostService, peerService) {
     if(!map || !playerMover) { return; }
 
@@ -282,6 +297,33 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
           player: 1,
         });
       }
+      gameState.bullets.forEach(function(bullet, index) {
+        var bulletSphere = {
+          pos: bullet.pos,
+          radius: 5
+        };
+        var playerSphere = {
+          radius: 20
+        };
+        if(bullet.player === 1) {
+          playerSphere.pos = [
+            playerMover.position[0],
+            playerMover.position[1],
+            playerMover.position[2] + 60];
+        } else {
+          playerSphere.pos = [
+            peerPositionData[0],
+            peerPositionData[1],
+            peerPositionData[2] + 60];
+        }
+        if(spheresCollide(bulletSphere, playerSphere)) {
+          var player = gameState.players[bullet.player ^ 1];
+          removeHealthFromPlayer(player, 10, hostService);
+          //delete bullet
+          gameState.bullets.splice(index, 1);
+          return;
+        }
+      });
     }
 
     // For great laggage!
@@ -723,6 +765,14 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
+function spheresCollide(sphere1, sphere2) {
+  var diffX = (sphere2.pos[0] - sphere1.pos[0]);
+  var diffY = (sphere2.pos[1] - sphere1.pos[1]);
+  var diffZ = (sphere2.pos[2] - sphere1.pos[2]);
+  var distance = Math.sqrt((diffX * diffX) + (diffY * diffY) + (diffZ * diffZ));
+  return (sphere1.radius + sphere2.radius) > distance;
+}
+
 function spawnBullet(pos, zAngle, peerService) {
   console.log("shots", gameState.bullets.length);
   if(playerIsHost) {
@@ -797,8 +847,8 @@ function main(
 
       gameState = {
         players: [
-          {lives: 3},
-          {lives: 3}
+          {lives: 3, health: 100, num: 0},
+          {lives: 3, health: 100, num: 1}
         ],
         bullets: [],
       };
