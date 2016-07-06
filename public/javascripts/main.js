@@ -252,6 +252,7 @@ function gameover(scores) {
     ((won) ? "You Won!" : "You Lost");
   alert(message);
   gameOver = true;
+  window.location = 'lobby';
 
   //TODO: Disable redraw and goto /lobby
 }
@@ -815,7 +816,7 @@ function renderLoop(gl, element, stats, playerLives, hostService, peerService, o
     function onRequestedFrame(){
         timestamp = new Date().getTime();
         if (gameOver) {
-          console.log('window.location: ', window.location);
+          //console.log('window.location: ', window.location);
           //window.location = 'lobby';
         }
 
