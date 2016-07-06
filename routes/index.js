@@ -98,7 +98,9 @@ router.post('/signup', function(req, res, next) {
 })
 
 router.post('/guest', function(req, res, next) {
-  var token = jwt.sign('guest', 'shhhhhhhhh');
+  var name = 'guest' + Math.floor(Math.random() * 100);
+  console.log('~~~~~~~~~~~~~', name);
+  var token = jwt.sign(name, 'shhhhhhhhh');
   res.json({
     success: true,
     message: 'Enjoy your token!',
