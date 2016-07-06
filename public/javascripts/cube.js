@@ -198,7 +198,7 @@ cube.prototype.draw = function(viewMatrix, projMatrix, pos, zAngle) {
 
   var modelMatrix = mat4.create();
   mat4.translate(modelMatrix, modelMatrix, pos);
-  mat4.rotateZ(modelMatrix, modelMatrix, zAngle);
+  mat4.rotateZ(modelMatrix, modelMatrix, -zAngle);
 
   var modelViewMatrix = mat4.create();
 
