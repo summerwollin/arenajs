@@ -77,10 +77,14 @@ var demo_obj = null;
 var allPeersConnected = false;
 
 var hostPositionData = [0,0,0];
-
 var hostAngleData;
 
+var peerPositionData = [0,0,0];
+var peerAngleData;
+
 var playerIsHost = false;
+
+var gameState;
 
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
@@ -222,7 +226,33 @@ function eulerFromQuaternion(out, q, order) {
 
 var lastMove = 0;
 
-function onFrame(gl, event, playerPosition, hostService) {
+function playerDied(which, hostService) {
+  console.log("player died" + ((which === 0) ? 'host' : 'peer'));
+  player = gameState.players[which];
+  player.lives--;
+  if(player.lives === 0) {
+    var score = [gameState.players[0].lives, gameState.players[1].lives];
+    hostService.sendBroadcastMessage({
+      type: 'p-gameOver',
+      score
+    });
+    gameover(score);
+  }
+  player.health = 100;
+}
+
+function gameover(scores) {
+  var won = (playerIsHost && (scores[0] > scores[1])) ||
+           (!playerIsHost && (scores[0] < scores[1]));
+  var message = "Game Over!\n" +
+    "Final Lives:  " + scores[0] + " - " + scores[1] + "\n" +
+    ((won) ? "You Won!" : "You Lost");
+  alert(message);
+
+  //TODO: Disable redraw and goto /lobby
+}
+
+function onFrame(gl, event, playerPosition, hostService, peerService) {
     if(!map || !playerMover) { return; }
 
     // Update player movement @ 60hz
@@ -232,9 +262,27 @@ function onFrame(gl, event, playerPosition, hostService) {
         lastMove += 16;
     }
 
+    if(playerIsHost && allPeersConnected) {
+      if(playerMover.position[2] < -1000) {
+        playerDied(0, hostService);
+        respawnPlayer(-1);
+        hostService.sendBroadcastMessage({
+          type: "p-playerDied",
+          player: 0,
+        });
+      }
+      if(peerPositionData[2] < -1000) {
+        playerDied(1, hostService);
+        hostService.sendBroadcastMessage({
+          type: "p-playerDied",
+          player: 1,
+        });
+      }
+    }
+
     // For great laggage!
     for (var i = 0; i < REPEAT_FRAMES; ++i)
-      drawFrame(gl, playerPosition, hostService);
+      drawFrame(gl, playerPosition, hostService, peerService);
 }
 
 var poseMatrix = mat4.create();
@@ -273,13 +321,20 @@ function getViewMatrix(out, pose, eye) {
 }
 
 // Draw a single frame
-function drawFrame(gl, playerPosition, hostService) {
+function drawFrame(gl, playerPosition, hostService, peerService) {
     playerPosition.innerHTML = playerMover.position;
 
-
-    if (allPeersConnected) {
-      hostService.sendBroadcastMessage({
-        type: "p-position",
+    if(playerIsHost) {
+      if (allPeersConnected) {
+        hostService.sendBroadcastMessage({
+          type: "p-state",
+          position: playerMover.position,
+          zAngle: zAngle
+        })
+      }
+    } else {
+      peerService.sendToHost({
+        type: "p-peerPosition",
         position: playerMover.position,
         zAngle: zAngle
       })
@@ -297,7 +352,11 @@ function drawFrame(gl, playerPosition, hostService) {
 
       // Here's where all the magic happens...
       map.draw(leftViewMat, leftProjMat);
-      demo_obj.draw(leftViewMat, leftProjMat, hostPositionData, hostAngleData);
+      if(playerIsHost && allPeersConnected) {
+        demo_obj.draw(leftViewMat, leftProjMat, peerPositionData, peerAngleData);
+      } else {
+        demo_obj.draw(leftViewMat, leftProjMat, hostPositionData, hostAngleData);
+      }
     } else if (vrDrawMode == 1) {
       var canvas = document.getElementById("viewport");
       leftViewport.width = canvas.width / 2.0;
@@ -602,7 +661,7 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
-function renderLoop(gl, element, stats, playerPosition, hostService) {
+function renderLoop(gl, element, stats, playerPosition, hostService, peerService) {
     var startTime = new Date().getTime();
     var lastTimestamp = startTime;
     var lastFps = startTime;
@@ -624,18 +683,43 @@ function renderLoop(gl, element, stats, playerPosition, hostService) {
             timestamp: timestamp,
             elapsed: timestamp - startTime,
             frameTime: timestamp - lastTimestamp
-        }, playerPosition, hostService);
+        }, playerPosition, hostService, peerService);
 
         stats.end();
     }
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition, hostAngle, startingDiv) {
-
+function main(
+  viewportFrame,
+  viewport,
+  webglError,
+  viewportInfo,
+  showFPS,
+  vrToggle,
+  mobileVrBtn,
+  fullscreenButton,
+  mobileFullscreenBtn,
+  playerPosition,
+  isHost,
+  options,
+  backendService,
+  peerService,
+  hostService,
+  hostPosition,
+  hostAngle,
+  startingDiv
+) {
     if (isHost) {
 
       playerIsHost = true;
+
+      gameState = {
+        players: [
+          {lives: 3},
+          {lives: 3}
+        ]
+      };
 
       hostService.hostGame(options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
@@ -660,17 +744,38 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
         }
       })
 
+      hostService.onDataReceived(function(peer, msg) {
+        if(msg.type === "p-peerPosition") {
+          hostPosition.innerHTML = msg.position;
+          hostAngle.innerHTML = msg.zAngle;
+          peerPositionData = msg.position;
+          peerAngleData = msg.zAngle;
+        } else {
+          console.log("unknown message[" + peer + "]", msg)
+        }
+      })
+
       //this.moveToState(new WelcomeState(this));
 
     } else {
       let game = this;
       peerService.onDataReceived(function (msg) {
-        hostPosition.innerHTML = msg.position;
-        hostAngle.innerHTML = msg.zAngle;
-        hostPositionData = msg.position;
-        hostAngleData = msg.zAngle;
-        allPeersConnected = true;
-        //console.log('received RTC message', msg);
+        if(msg.type === "p-state") {
+          hostPosition.innerHTML = msg.position;
+          hostAngle.innerHTML = msg.zAngle;
+          hostPositionData = msg.position;
+          hostAngleData = msg.zAngle;
+          allPeersConnected = true;
+        } else if(msg.type === 'p-gameOver') {
+          gameover(msg.score);
+        } else if(msg.type === 'p-playerDied') {
+          if(msg.player === 1) {
+            console.log("I totes died");
+            respawnPlayer(-1);
+          }
+        } else {
+          console.log("unknown message[host]", msg);
+        }
       })
       //this.moveToState(new GhostedLevelIntroState());
     }
@@ -715,7 +820,7 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
           viewportInfo.style.display = 'block';
           initEvents();
           initGL(gl, canvas);
-          renderLoop(gl, canvas, stats, playerPosition, hostService);
+          renderLoop(gl, canvas, stats, playerPosition, hostService, peerService);
       }
 
       onResize();

@@ -17,7 +17,8 @@
       onSignallingInfoAvailable,
       answerReceived,
       onConnect,
-      onDataReceived
+      onDataReceived,
+      sendToHost
     };
 
     function joinGame(game) {
@@ -73,6 +74,9 @@
       dataReceivedCallback = callback;
     }
 
-
+    function sendToHost(msg) {
+      var data = JSON.stringify(msg);
+      dataChannel.send(data);
+    }
   }
 }());

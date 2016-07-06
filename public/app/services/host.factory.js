@@ -13,6 +13,7 @@
     var numPlayers;
     var onSignallingReadyCallback = null;
     var allPeersConnectedCallback = null;
+    var dataReceivedCallback = null;
 
     return {
       hostGame,
@@ -20,7 +21,8 @@
       joinGameReceived,
       onSignallingReady,
       onAllPeersConnected,
-      sendBroadcastMessage
+      sendBroadcastMessage,
+      onDataReceived
     };
 
     function hostGame(numberOfPlayers) {
@@ -57,6 +59,13 @@
           anotherPeerConnected();
         });
 
+        peer.dataChannel.on('data', function(data) {
+          var msg = JSON.parse(data);
+          if(dataReceivedCallback) {
+            dataReceivedCallback(peer.username, msg);
+          }
+        });
+
         peer.dataChannel.signal(peer.sdp);
       }
       console.log("hostService.joinGameReceived(",msg,")");
@@ -83,6 +92,10 @@
         //console.log('hostService [sendBroadcastMessage]');
         peer.dataChannel.send(JSON.stringify(msg));
       })
+    }
+
+    function onDataReceived(callback) {
+      dataReceivedCallback = callback;
     }
 
     ////////////////////////////////////////////
