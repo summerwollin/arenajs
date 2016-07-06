@@ -126,14 +126,14 @@ cube.prototype.setupProgram = function() {
     "\n" +
     "uniform mat4 modelViewMat;\n" +
     "uniform mat4 projectionMat;\n" +
+    "uniform float scale;\n" +
     "\n" +
     "varying vec4 vColor;\n" +
     "\n" +
     "void main() {\n" +
     "  vColor = color;\n" +
     "  \n" +
-    "  vec3 scaledPosition = position * 20.0;\n" +
-    "  scaledPosition.z += 80.0;\n" +
+    "  vec3 scaledPosition = position * scale;\n" +
     "  vec4 worldPosition = modelViewMat * vec4(scaledPosition, 1.0);\n" +
     "  gl_Position = projectionMat * worldPosition;\n" +
     "}\n",
@@ -149,6 +149,7 @@ cube.prototype.setupProgram = function() {
   // Save the attribute and uniform locations
   this.locations.modelView = gl.getUniformLocation(webglProgram, "modelViewMat");
   this.locations.projection = gl.getUniformLocation(webglProgram, "projectionMat");
+  this.locations.scale = gl.getUniformLocation(webglProgram, "scale");
   this.locations.position = gl.getAttribLocation(webglProgram, "position");
   this.locations.color = gl.getAttribLocation(webglProgram, "color");
 
@@ -191,7 +192,7 @@ function linkProgram(gl, vertexShader, fragmentShader) {
   return program;
 }
 
-cube.prototype.draw = function(viewMatrix, projMatrix, pos, zAngle) {
+cube.prototype.draw = function(viewMatrix, projMatrix, pos, zAngle, scale) {
   var gl = this.gl;
 
   gl.useProgram(this.webglProgram);
@@ -206,6 +207,7 @@ cube.prototype.draw = function(viewMatrix, projMatrix, pos, zAngle) {
 
   gl.uniformMatrix4fv(this.locations.modelView, false, modelViewMatrix);
   gl.uniformMatrix4fv(this.locations.projection, false, projMatrix);
+  gl.uniform1f(this.locations.scale, scale);
 
   // Set the positions attribute
   gl.enableVertexAttribArray(this.locations.position);

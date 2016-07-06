@@ -355,9 +355,19 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
       // Here's where all the magic happens...
       map.draw(leftViewMat, leftProjMat);
       if(playerIsHost && allPeersConnected) {
-        demo_obj.draw(leftViewMat, leftProjMat, peerPositionData, peerAngleData);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 70],
+          peerAngleData,
+          20);
       } else {
-        demo_obj.draw(leftViewMat, leftProjMat, hostPositionData, hostAngleData);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [hostPositionData, hostPositionData[1], hostPositionData[2] + 70],
+          hostAngleData,
+          20);
       }
     } else if (vrDrawMode == 1) {
       var canvas = document.getElementById("viewport");
@@ -723,7 +733,8 @@ function main(
         players: [
           {lives: 3},
           {lives: 3}
-        ]
+        ],
+        
       };
 
       hostService.hostGame(options.numPlayers);
