@@ -26,7 +26,7 @@
     var playerPosition = document.getElementById('playerPosition');
     var hostPosition = document.getElementById('hostPosition');
     var hostAngle = document.getElementById('hostAngle');
-
+    var startingDiv = document.getElementById('starting');
 
     main(
       viewportFrame,
@@ -45,7 +45,8 @@
       scope.peerService,
       scope.hostService,
       hostPosition,
-      hostAngle
+      hostAngle,
+      startingDiv
     )
 
   }

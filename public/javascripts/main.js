@@ -80,6 +80,8 @@ var hostPositionData = [0,0,0];
 
 var hostAngleData;
 
+var playerIsHost = false;
+
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
 }
@@ -389,17 +391,19 @@ function updateInput(frameTime) {
     var dir = [0, 0, 0];
 
     // This is our first person movement code. It's not really pretty, but it works
-    if(pressed['W'.charCodeAt(0)]) {
-        dir[1] += 1;
-    }
-    if(pressed['S'.charCodeAt(0)]) {
-        dir[1] -= 1;
-    }
-    if(pressed['A'.charCodeAt(0)]) {
-        dir[0] -= 1;
-    }
-    if(pressed['D'.charCodeAt(0)]) {
-        dir[0] += 1;
+    if((!playerIsHost) || allPeersConnected) {
+      if(pressed['W'.charCodeAt(0)]) {
+          dir[1] += 1;
+      }
+      if(pressed['S'.charCodeAt(0)]) {
+          dir[1] -= 1;
+      }
+      if(pressed['A'.charCodeAt(0)]) {
+          dir[0] -= 1;
+      }
+      if(pressed['D'.charCodeAt(0)]) {
+          dir[0] += 1;
+      }
     }
 
     var gamepads = [];
@@ -449,8 +453,12 @@ function initEvents() {
     var viewportFrame = document.getElementById("viewport-frame");
 
     document.addEventListener("keydown", function(event) {
+
         if(event.keyCode == 32 && !pressed[32]) {
+          console.log('jump pressed: ', playerIsHost, allPeersConnected);
+          if ((!playerIsHost) || allPeersConnected) {
             playerMover.jump();
+          }
         }
         pressed[event.keyCode] = true;
         if ((event.keyCode == 'W'.charCodeAt(0) ||
@@ -464,7 +472,9 @@ function initEvents() {
 
     document.addEventListener("keypress", function(event) {
         if(event.charCode == 'R'.charCodeAt(0) || event.charCode == 'r'.charCodeAt(0)) {
+          if ((!playerIsHost) || allPeersConnected) {
             respawnPlayer(-1);
+          }
         }
         if(event.charCode == 'C'.charCodeAt(0) || event.charCode == 'c'.charCodeAt(0)) {
             if (vrDisplay) {
@@ -621,9 +631,11 @@ function renderLoop(gl, element, stats, playerPosition, hostService) {
     window.requestAnimationFrame(onRequestedFrame, element);
 }
 
-function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition, hostAngle) {
+function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrToggle, mobileVrBtn, fullscreenButton, mobileFullscreenBtn, playerPosition, isHost, options, backendService, peerService, hostService, hostPosition, hostAngle, startingDiv) {
 
     if (isHost) {
+
+      playerIsHost = true;
 
       hostService.hostGame(options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
@@ -638,6 +650,14 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
         console.log('arenajs [onAllPeersConnected]');
         allPeersConnected = true;
         hostService.sendBroadcastMessage({type: 'overall-allClear'});
+        console.log('Ready...Set...play!');
+        startingDiv.style.display = 'block';
+        console.log('after style = block');
+        setTimeout(removeStartingDiv(), 20000);
+        function removeStartingDiv() {
+          console.log('~~~REMOVE_STARTING_DIV~~~');
+          startingDiv.style.display = 'none';
+        }
       })
 
       //this.moveToState(new WelcomeState(this));
@@ -649,110 +669,113 @@ function main(viewportFrame, viewport, webglError, viewportInfo, showFPS, vrTogg
         hostAngle.innerHTML = msg.zAngle;
         hostPositionData = msg.position;
         hostAngleData = msg.zAngle;
+        allPeersConnected = true;
         //console.log('received RTC message', msg);
       })
       //this.moveToState(new GhostedLevelIntroState());
     }
 
-    var stats = new Stats();
-    viewportFrame.appendChild( stats.domElement );
+      var stats = new Stats();
+      viewportFrame.appendChild( stats.domElement );
 
-    var canvas = viewport;
+      var canvas = viewport;
 
-    // Get the GL Context (try 'webgl' first, then fallback)
-    var gl = getAvailableContext(canvas, ['webgl', 'experimental-webgl']);
+      // Get the GL Context (try 'webgl' first, then fallback)
+      var gl = getAvailableContext(canvas, ['webgl', 'experimental-webgl']);
 
-    onResize = function() {
-        if (vrDisplay && vrDisplay.isPresenting) {
-          var leftEye = vrDisplay.getEyeParameters("left");
-          var rightEye = vrDisplay.getEyeParameters("right");
+      onResize = function() {
+          if (vrDisplay && vrDisplay.isPresenting) {
+            var leftEye = vrDisplay.getEyeParameters("left");
+            var rightEye = vrDisplay.getEyeParameters("right");
 
-          canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
-          canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
-        } else {
-          var devicePixelRatio = window.devicePixelRatio || 1;
-
-          if(document.fullscreenElement) {
-              canvas.width = screen.width * devicePixelRatio;
-              canvas.height = screen.height * devicePixelRatio;
+            canvas.width = Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2;
+            canvas.height = Math.max(leftEye.renderHeight, rightEye.renderHeight);
           } else {
-              canvas.width = canvas.clientWidth * devicePixelRatio;
-              canvas.height = canvas.clientHeight * devicePixelRatio;
+            var devicePixelRatio = window.devicePixelRatio || 1;
+
+            if(document.fullscreenElement) {
+                canvas.width = screen.width * devicePixelRatio;
+                canvas.height = screen.height * devicePixelRatio;
+            } else {
+                canvas.width = canvas.clientWidth * devicePixelRatio;
+                canvas.height = canvas.clientHeight * devicePixelRatio;
+            }
+
+            if (!isVRPresenting()) {
+              gl.viewport(0, 0, canvas.width, canvas.height);
+              mat4.perspective(leftProjMat, 45.0, canvas.width/canvas.height, 1.0, 4096.0);
+            }
           }
-
-          if (!isVRPresenting()) {
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            mat4.perspective(leftProjMat, 45.0, canvas.width/canvas.height, 1.0, 4096.0);
-          }
-        }
-    }
-
-    if(!gl) {
-        viewportFrame.style.display = 'none';
-        webglError.style.display = 'block';
-    } else {
-        viewportInfo.style.display = 'block';
-        initEvents();
-        initGL(gl, canvas);
-        renderLoop(gl, canvas, stats, playerPosition, hostService);
-    }
-
-    onResize();
-    window.addEventListener("resize", onResize, false);
-
-    showFPS.addEventListener("change", function() {
-        stats.domElement.style.display = showFPS.checked ? "block" : "none";
-    });
-
-    function EnumerateVRDisplays(displays) {
-      if (displays.length > 0) {
-        vrDisplay = displays[0];
-
-        vrToggle.style.display = "block";
-        mobileVrBtn.style.display = "block";
-
-        // Handle VR presentation change
-        window.addEventListener("vrdisplaypresentchange", function() {
-          onResize();
-        }, false);
       }
-    }
 
-    if (navigator.getVRDisplays) {
-      navigator.getVRDisplays().then(EnumerateVRDisplays);
-    }
-
-    /*var playMusic = document.getElementById("playMusic");
-    playMusic.addEventListener("change", function() {
-        if(map) {
-            map.playMusic(playMusic.checked);
-        }
-    });*/
-
-    // Handle fullscreen transition
-    document.addEventListener("fullscreenchange", function() {
-        if(document.fullscreenElement) {
-            viewport.requestPointerLock(); // Attempt to lock the mouse automatically on fullscreen
-        }
-        onResize();
-    }, false);
-
-    // Fullscreen
-    function goFullscreen() {
-        viewportFrame.requestFullScreen();
-    }
-    fullscreenButton.addEventListener('click', goFullscreen, false);
-    mobileFullscreenBtn.addEventListener('click', goFullscreen, false);
-
-    // VR
-    function presentVR() {
-      if (vrDisplay.isPresenting) {
-        vrDisplay.exitPresent();
+      if(!gl) {
+          viewportFrame.style.display = 'none';
+          webglError.style.display = 'block';
       } else {
-        xAngle = 0.0;
-        vrDisplay.requestPresent({ source: viewport });
+          viewportInfo.style.display = 'block';
+          initEvents();
+          initGL(gl, canvas);
+          renderLoop(gl, canvas, stats, playerPosition, hostService);
       }
-    }
+
+      onResize();
+      window.addEventListener("resize", onResize, false);
+
+      showFPS.addEventListener("change", function() {
+          stats.domElement.style.display = showFPS.checked ? "block" : "none";
+      });
+
+      function EnumerateVRDisplays(displays) {
+        if (displays.length > 0) {
+          vrDisplay = displays[0];
+
+          vrToggle.style.display = "block";
+          mobileVrBtn.style.display = "block";
+
+          // Handle VR presentation change
+          window.addEventListener("vrdisplaypresentchange", function() {
+            onResize();
+          }, false);
+        }
+      }
+
+      if (navigator.getVRDisplays) {
+        navigator.getVRDisplays().then(EnumerateVRDisplays);
+      }
+
+      /*var playMusic = document.getElementById("playMusic");
+      playMusic.addEventListener("change", function() {
+          if(map) {
+              map.playMusic(playMusic.checked);
+          }
+      });*/
+
+      // Handle fullscreen transition
+      document.addEventListener("fullscreenchange", function() {
+          if(document.fullscreenElement) {
+              viewport.requestPointerLock(); // Attempt to lock the mouse automatically on fullscreen
+          }
+          onResize();
+      }, false);
+
+      // Fullscreen
+      function goFullscreen() {
+          viewportFrame.requestFullScreen();
+      }
+      fullscreenButton.addEventListener('click', goFullscreen, false);
+      mobileFullscreenBtn.addEventListener('click', goFullscreen, false);
+
+      // VR
+      function presentVR() {
+        if (vrDisplay.isPresenting) {
+          vrDisplay.exitPresent();
+        } else {
+          xAngle = 0.0;
+          vrDisplay.requestPresent({ source: viewport });
+        }
+      }
+
+
     //vrBtn.addEventListener("click", presentVR, false);
   //  mobileVrBtn.addEventListener("click", presentVR, false);
 
