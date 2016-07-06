@@ -46,6 +46,7 @@
         // Similar to close.  Connetion killed.  Back
       });
       dataChannel.on('data', function(data) {
+        console.log('~~~~~~~~~[[peer on data]]~~~~~~~~~~~~', data);
         let msg = JSON.parse(data);
         //console.log('peerService [dataChannel.onData]', msg)
         if (dataReceivedCallback) {

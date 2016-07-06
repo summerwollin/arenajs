@@ -116,6 +116,9 @@ select {
   margin-top: 20px;
   margin-right: 20px;
 }
+.chat-box {
+  text-align: left;
+}
 .div-currentusers {
   background-color: #0C6E77;
   text-align: center;
