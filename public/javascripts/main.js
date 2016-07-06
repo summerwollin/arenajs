@@ -375,18 +375,21 @@ function getViewMatrix(out, pose, eye) {
 
 // Draw a single frame
 function drawFrame(gl, playerPosition, hostService, peerService) {
-    playerPosition.innerHTML = playerMover.position;
+
 
     if(playerIsHost) {
       if (allPeersConnected) {
+        playerPosition.innerHTML = gameState.players[0].lives;
         hostService.sendBroadcastMessage({
           type: "p-state",
           position: playerMover.position,
           zAngle: zAngle,
-          bullets: gameState.bullets
+          bullets: gameState.bullets,
+          players: gameState.players
         })
       }
     } else {
+      playerPosition.innerHTML = gameState.players[1].lives;
       peerService.sendToHost({
         type: "p-peerPosition",
         position: playerMover.position,
@@ -909,7 +912,7 @@ function main(
           hostAngle.innerHTML = msg.zAngle;
           hostPositionData = msg.position;
           hostAngleData = msg.zAngle;
-          gameState = {bullets: msg.bullets};
+          gameState = {bullets: msg.bullets, players: msg.players};
           allPeersConnected = true;
         } else if(msg.type === 'p-gameOver') {
           gameover(msg.score);
