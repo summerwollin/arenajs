@@ -1,8 +1,10 @@
 <div>
-  <h1>ArenaJS</h1>
-  <p>My Lives: <span id="playerLives"></span></p>
-  <p>Opponent's Lives: <span id="opponentLives"></span></p>
-  <p>Health: <span id="myHealth"></span></p>
+  <div class="logo-cont">
+    <h1 class="h1-logo">ArenaJS</h1>
+  </div>
+  <p style="display:none" ng-hide="true">My Lives: <span id="playerLives"></span></p>
+  <p style="display:none" ng-hide="true">Opponent's Lives: <span id="opponentLives"></span></p>
+  <p style="display:none" ng-hide="true">Health: <span id="myHealth"></span></p>
   <div id="starting" style="display:none">
       Ready...Play!
   </div>
@@ -40,6 +42,7 @@
               <li><b>Movement:</b> W,A,S,D</li>
               <li><b>Jump:</b> Space</li>
               <li><b>Respawn:</b> R</li>
+              <li><b>Fire:</b> F</li>
           </ul>
       </div>
 

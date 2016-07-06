@@ -131,7 +131,9 @@ select {
 .div-currentusers ul {
   list-style: none;
 }
-
+.logo-cont {
+  text-align: center;
+}
 
 
 
