@@ -85,6 +85,7 @@ var peerAngleData;
 var playerIsHost = false;
 
 var gameState;
+var gameOver = false;
 
 function isVRPresenting() {
   return (vrDisplay && vrDisplay.isPresenting);
@@ -248,6 +249,7 @@ function gameover(scores) {
     "Final Lives:  " + scores[0] + " - " + scores[1] + "\n" +
     ((won) ? "You Won!" : "You Lost");
   alert(message);
+  gameOver = true;
 
   //TODO: Disable redraw and goto /lobby
 }
@@ -670,6 +672,9 @@ function renderLoop(gl, element, stats, playerPosition, hostService, peerService
 
     function onRequestedFrame(){
         timestamp = new Date().getTime();
+        if (gameOver) {
+          window.location = '/lobby';
+        }
 
         window.requestAnimationFrame(onRequestedFrame, element);
 
