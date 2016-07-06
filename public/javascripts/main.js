@@ -262,7 +262,7 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
     // Update player movement @ 60hz
     // The while ensures that we update at a fixed rate even if the rendering bogs down
     while(event.elapsed - lastMove >= 16) {
-        updateInput(16);
+        updateInput(16, peerService);
         lastMove += 16;
     }
 
@@ -467,7 +467,7 @@ function moveViewOriented(dir, frameTime) {
   playerMover.move(dir, frameTime);
 }
 
-function updateInput(frameTime) {
+function updateInput(frameTime, peerService) {
     if(!playerMover) { return; }
 
     var dir = [0, 0, 0];
@@ -487,7 +487,7 @@ function updateInput(frameTime) {
           dir[0] += 1;
       }
       if(pressed['F'.charCodeAt(0)]) {
-        spawnBullet(playerMover.position, zAngle);
+        spawnBullet(playerMover.position, zAngle, peerService);
       }
     }
 
@@ -687,7 +687,7 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
-function spawnBullet(pos, zAngle) {
+function spawnBullet(pos, zAngle, peerService) {
   console.log("shots", gameState.bullets.length);
   if(playerIsHost) {
     gameState.bullets.push({
@@ -796,6 +796,11 @@ function main(
           hostAngle.innerHTML = msg.zAngle;
           peerPositionData = msg.position;
           peerAngleData = msg.zAngle;
+        } else if (msg.type === "p-shotsFired!") {
+          gameState.bullets.push({
+            pos: msg.pos,
+            player: 1,
+            zAngle: msg.zAngle});
         } else {
           console.log("unknown message[" + peer + "]", msg)
         }
