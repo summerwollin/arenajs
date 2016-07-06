@@ -23,9 +23,9 @@
     var mobileVrBtn = document.getElementById('mobileVrBtn');
     var fullscreenBtn = document.getElementById('fullscreenBtn');
     var mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
-    var playerPosition = document.getElementById('playerPosition');
-    var hostPosition = document.getElementById('hostPosition');
-    var hostAngle = document.getElementById('hostAngle');
+    var playerLives = document.getElementById('playerLives');
+    var opponentLives = document.getElementById('opponentLives');
+    var myHealth = document.getElementById('myHealth');
     var startingDiv = document.getElementById('starting');
 
     main(
@@ -38,14 +38,14 @@
       mobileVrBtn,
       fullscreenBtn,
       mobileFullscreenBtn,
-      playerPosition,
+      playerLives,
       scope.isHost,
       scope.options,
       scope.backendService,
       scope.peerService,
       scope.hostService,
-      hostPosition,
-      hostAngle,
+      opponentLives,
+      myHealth,
       startingDiv
     )
 

@@ -271,7 +271,7 @@ function removeHealthFromPlayer(player, amount, hostService) {
   }
 }
 
-function onFrame(gl, event, playerPosition, hostService, peerService) {
+function onFrame(gl, event, playerLives, hostService, peerService, opponentLives, myHealth) {
     if(!map || !playerMover) { return; }
 
     // Update player movement @ 60hz
@@ -335,7 +335,7 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
 
     // For great laggage!
     for (var i = 0; i < REPEAT_FRAMES; ++i)
-      drawFrame(gl, playerPosition, hostService, peerService);
+      drawFrame(gl, playerLives, hostService, peerService, opponentLives, myHealth);
 }
 
 var poseMatrix = mat4.create();
@@ -374,12 +374,15 @@ function getViewMatrix(out, pose, eye) {
 }
 
 // Draw a single frame
-function drawFrame(gl, playerPosition, hostService, peerService) {
+function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myHealth) {
 
 
     if(playerIsHost) {
       if (allPeersConnected) {
-        playerPosition.innerHTML = gameState.players[0].lives;
+        playerLives.innerHTML = gameState.players[0].lives;
+        opponentLives.innerHTML = gameState.players[1].lives;
+        myHealth.innerHTML = gameState.players[0].health;
+
         hostService.sendBroadcastMessage({
           type: "p-state",
           position: playerMover.position,
@@ -389,7 +392,10 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
         })
       }
     } else {
-      playerPosition.innerHTML = gameState.players[1].lives;
+      playerLives.innerHTML = gameState.players[1].lives;
+      opponentLives.innerHTML = gameState.players[0].lives;
+      myHealth.innerHTML = gameState.players[1].health;
+
       peerService.sendToHost({
         type: "p-peerPosition",
         position: playerMover.position,
@@ -799,7 +805,7 @@ function spawnBullet(pos, zAngle, peerService) {
   }
 }
 
-function renderLoop(gl, element, stats, playerPosition, hostService, peerService) {
+function renderLoop(gl, element, stats, playerLives, hostService, peerService, opponentLives, myHealth) {
     var startTime = new Date().getTime();
     var lastTimestamp = startTime;
     var lastFps = startTime;
@@ -824,7 +830,7 @@ function renderLoop(gl, element, stats, playerPosition, hostService, peerService
             timestamp: timestamp,
             elapsed: timestamp - startTime,
             frameTime: timestamp - lastTimestamp
-        }, playerPosition, hostService, peerService);
+        }, playerLives, hostService, peerService, opponentLives, myHealth);
 
         stats.end();
     }
@@ -841,14 +847,14 @@ function main(
   mobileVrBtn,
   fullscreenButton,
   mobileFullscreenBtn,
-  playerPosition,
+  playerLives,
   isHost,
   options,
   backendService,
   peerService,
   hostService,
-  hostPosition,
-  hostAngle,
+  opponentLives,
+  myHealth,
   startingDiv
 ) {
     if (isHost) {
@@ -888,8 +894,6 @@ function main(
 
       hostService.onDataReceived(function(peer, msg) {
         if(msg.type === "p-peerPosition") {
-          hostPosition.innerHTML = msg.position;
-          hostAngle.innerHTML = msg.zAngle;
           peerPositionData = msg.position;
           peerAngleData = msg.zAngle;
         } else if (msg.type === "p-shotsFired!") {
@@ -908,8 +912,6 @@ function main(
       let game = this;
       peerService.onDataReceived(function (msg) {
         if(msg.type === "p-state") {
-          hostPosition.innerHTML = msg.position;
-          hostAngle.innerHTML = msg.zAngle;
           hostPositionData = msg.position;
           hostAngleData = msg.zAngle;
           gameState = {bullets: msg.bullets, players: msg.players};
@@ -968,7 +970,7 @@ function main(
           viewportInfo.style.display = 'block';
           initEvents();
           initGL(gl, canvas);
-          renderLoop(gl, canvas, stats, playerPosition, hostService, peerService);
+          renderLoop(gl, canvas, stats, playerLives, hostService, peerService, opponentLives, myHealth);
       }
 
       onResize();
