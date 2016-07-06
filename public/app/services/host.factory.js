@@ -66,6 +66,11 @@
           }
         });
 
+        peer.dataChannel.on('error', function(err) {
+          console.log('hostService [dataChannel.onError]', err)
+          // Similar to close.  Connetion killed.  Back
+        });
+
         peer.dataChannel.signal(peer.sdp);
       }
       console.log("hostService.joinGameReceived(",msg,")");
