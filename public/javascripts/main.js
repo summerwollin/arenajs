@@ -361,14 +361,50 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
         demo_obj.draw(
           leftViewMat,
           leftProjMat,
-          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 70],
+          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 10],
+          peerAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 20],
+          peerAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 40],
+          peerAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 60],
           peerAngleData,
           20);
       } else {
         demo_obj.draw(
           leftViewMat,
           leftProjMat,
-          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 70],
+          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 10],
+          hostAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 20],
+          hostAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 40],
+          hostAngleData,
+          20);
+        demo_obj.draw(
+          leftViewMat,
+          leftProjMat,
+          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 60],
           hostAngleData,
           20);
       }
@@ -376,7 +412,7 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
         demo_obj.draw(
           leftViewMat,
           leftProjMat,
-          [bullet.pos[0], bullet.pos[1], bullet.pos[2] + 50],
+          [bullet.pos[0], bullet.pos[1], bullet.pos[2]],
           bullet.zAngle,
           2);
         });
@@ -691,13 +727,13 @@ function spawnBullet(pos, zAngle, peerService) {
   console.log("shots", gameState.bullets.length);
   if(playerIsHost) {
     gameState.bullets.push({
-      pos: [pos[0], pos[1], pos[2]],
+      pos: [pos[0], pos[1], pos[2] + 55],
       player: 0,
       zAngle});
   } else {
     peerService.sendToHost({
       type: "p-shotsFired!",
-      pos,
+      pos: [pos[0], pos[1], pos[2] + 55],
       zAngle
     })
   }
