@@ -361,11 +361,20 @@ function drawFrame(gl, playerPosition, hostService, peerService) {
           [peerPositionData[0], peerPositionData[1], peerPositionData[2] + 70],
           peerAngleData,
           20);
+        gameState.bullets.forEach(function(bullet) {
+          console.log("bullet", bullet);
+          demo_obj.draw(
+            leftViewMat,
+            leftProjMat,
+            [bullet.pos[0], bullet.pos[1], bullet.pos[2] + 50],
+            bullet.zAngle,
+            5);
+          });
       } else {
         demo_obj.draw(
           leftViewMat,
           leftProjMat,
-          [hostPositionData, hostPositionData[1], hostPositionData[2] + 70],
+          [hostPositionData[0], hostPositionData[1], hostPositionData[2] + 70],
           hostAngleData,
           20);
       }
@@ -474,6 +483,9 @@ function updateInput(frameTime) {
       }
       if(pressed['D'.charCodeAt(0)]) {
           dir[0] += 1;
+      }
+      if(pressed['F'.charCodeAt(0)]) {
+        spawnBullet(playerMover.position, zAngle);
       }
     }
 
@@ -673,6 +685,22 @@ function getAvailableContext(canvas, contextList) {
     return null;
 }
 
+function spawnBullet(pos, zAngle) {
+  console.log("shots", gameState.bullets.length);
+  if(playerIsHost) {
+    gameState.bullets.push({
+      pos: [pos[0], pos[1], pos[2]],
+      player: 0,
+      zAngle});
+  } else {
+    peerService.sendToHost({
+      type: "p-shotsFired!",
+      pos,
+      zAngle
+    })
+  }
+}
+
 function renderLoop(gl, element, stats, playerPosition, hostService, peerService) {
     var startTime = new Date().getTime();
     var lastTimestamp = startTime;
@@ -734,7 +762,7 @@ function main(
           {lives: 3},
           {lives: 3}
         ],
-        
+        bullets: [],
       };
 
       hostService.hostGame(options.numPlayers);
