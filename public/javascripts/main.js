@@ -152,12 +152,21 @@ function initMap(gl) {
 
 // Process entities loaded from the map
 function initMapEntities(entities) {
+  if (playerIsHost) {
     respawnPlayer(0);
+  } else {
+    respawnPlayer(-1);
+  }
+
 }
 
 function initPlayerMover(bsp) {
     playerMover = new q3movement(bsp);
-    respawnPlayer(0);
+    if (playerIsHost) {
+      respawnPlayer(0);
+    } else {
+      respawnPlayer(-1);
+    }
     document.getElementById('viewport').style.display = 'block';
     onResize();
 }
