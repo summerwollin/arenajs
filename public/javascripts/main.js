@@ -327,7 +327,7 @@ function onFrame(gl, event, playerPosition, hostService, peerService) {
       });
       // Move remaining bullets
       gameState.bullets.forEach(function(bullet) {
-        var velocityVector = [0,1,0];
+        var velocityVector = [0,10,0];
         vec3.rotateZ(velocityVector, velocityVector, vec3.create(), -bullet.zAngle);
         vec3.add(bullet.pos, bullet.pos, velocityVector);
       });
