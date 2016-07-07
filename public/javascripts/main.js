@@ -868,17 +868,20 @@ function main(
   myHealth,
   startingDiv
 ) {
+
+    gameState = {
+      players: [
+        {lives: 3, health: 100, num: 0},
+        {lives: 3, health: 100, num: 1}
+      ],
+      bullets: [],
+    };
+
     if (isHost) {
 
       playerIsHost = true;
 
-      gameState = {
-        players: [
-          {lives: 3, health: 100, num: 0},
-          {lives: 3, health: 100, num: 1}
-        ],
-        bullets: [],
-      };
+
 
       hostService.hostGame(options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
