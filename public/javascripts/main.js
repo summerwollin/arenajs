@@ -389,9 +389,9 @@ function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myH
 
     if(playerIsHost) {
       if (allPeersConnected) {
-        playerLives.innerHTML = gameState.players[0].lives;
-        opponentLives.innerHTML = gameState.players[1].lives;
-        myHealth.innerHTML = gameState.players[0].health;
+        // playerLives.innerHTML = gameState.players[0].lives;
+        // opponentLives.innerHTML = gameState.players[1].lives;
+        // myHealth.innerHTML = gameState.players[0].health;
 
         hostService.sendBroadcastMessage({
           type: "p-state",
@@ -402,9 +402,9 @@ function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myH
         })
       }
     } else {
-      playerLives.innerHTML = gameState.players[1].lives;
-      opponentLives.innerHTML = gameState.players[0].lives;
-      myHealth.innerHTML = gameState.players[1].health;
+      // playerLives.innerHTML = gameState.players[1].lives;
+      // opponentLives.innerHTML = gameState.players[0].lives;
+      // myHealth.innerHTML = gameState.players[1].health;
 
       peerService.sendToHost({
         type: "p-peerPosition",
@@ -868,20 +868,17 @@ function main(
   myHealth,
   startingDiv
 ) {
-
-    gameState = {
-      players: [
-        {lives: 3, health: 100, num: 0},
-        {lives: 3, health: 100, num: 1}
-      ],
-      bullets: [],
-    };
-
     if (isHost) {
 
       playerIsHost = true;
 
-
+      gameState = {
+        players: [
+          {lives: 3, health: 100, num: 0},
+          {lives: 3, health: 100, num: 1}
+        ],
+        bullets: [],
+      };
 
       hostService.hostGame(options.numPlayers);
       hostService.onSignallingReady(function(data, username) {
