@@ -2,9 +2,6 @@
   <div class="logo-cont">
     <h1 class="h1-logo">ArenaJS</h1>
   </div>
-  <p style="display:none" ng-hide="true">My Lives: <span id="playerLives"></span></p>
-  <p style="display:none" ng-hide="true">Opponent's Lives: <span id="opponentLives"></span></p>
-  <p style="display:none" ng-hide="true">Health: <span id="myHealth"></span></p>
   <div id="starting" style="display:none">
       Ready...Play!
   </div>
@@ -56,13 +53,22 @@
       </div>
 
       <div id="config">
-          <h3 style="color: #e5680a">Settings</h3>
-          <ul>
-              <li><b>Show FPS:</b> <input type="checkbox" id="showFPS" checked/></li>
+          <h3 style="color: #e5680a">Stats</h3>
+          <ul style="display: none;">
+              <li style="display: none;"><b>Show FPS:</b> <input type="checkbox" id="showFPS" checked/></li>
               <li style="display: none;" id="vrToggle"><b>VR:</b> <img src="images/vr_goggles_sm.png" id="vrBtn"/></li>
               <!--li><b>Background Music:</b> <input type="checkbox" id="playMusic" checked="true"/></li-->
               <li style="display: none;"><b>Fullscreen:</b> <img src="public/images/fullscreen_sm.png" id="fullscreenBtn"/></li>
           </ul>
+          <div class="row">
+            <div class="col-md-12">
+              <ul class="gameText">
+                <li><span style="color: #ffb222" class="gameP">My Lives: </span><span id="playerLives"></span></li>
+                <li><span style="color: #ffb222" class="gameP">Opponent's Lives: </span><span id="opponentLives"></span></li>
+                <li><span style="color: #ffb222" class="gameP">Health: </span><span id="myHealth"></span></li>
+              </ul>
+            </div>
+          </div>
       </div>
   </div>
 </div>
