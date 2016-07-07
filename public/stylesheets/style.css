@@ -2,14 +2,19 @@
   font-family: Base;
   src: url(Base.ttf);
 }
+@font-face {
+  font-family: NEUROPOL;
+  src: url(FSQUARE.ttf);
+}
 
 body {
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #02565E;
+  font-family: NEUROPOL;
+  background-color: #220605;
   color: white;
+  font-size: 1.75rem;
 }
 a {
-  color: #9AD72D;
+  color: #ffb222;
 }
 input {
   color: black;
@@ -18,16 +23,18 @@ select {
   color: black;
 }
 .btn-default {
-  background-color: #9AD72D;
-  border: #9AD72D
+  background-color: #ffb222;
+  border: #ffb222;
+  color: white;
+  font-size: 2rem;
 }
-.btn-default:hover {
+/*.btn-default:hover {
   background-color: #C8F27B;
   border: #C8F27B;
-}
+}*/
 .h1-logo {
   font-family: Base;
-  color: #BA8515;
+  color: #e5680a;
   font-size: 70px;
 }
 .main {
@@ -51,30 +58,35 @@ select {
   padding: 20px;
   padding-left: 60px;
   padding-right: 60px;
-  background-color: #0C6E77;
+  background-color: #3B3632;
+  border: 1px solid #524B45;
   border-radius: 15px;
   margin: 20px;
   margin-left: 30px;
 }
 .main-about {
-  background-color: #0C6E77;
+  background-color: #3B3632;
+  border: 1px solid #524B45;
   border-radius: 15px;
   margin-right: 15px;
+  margin-top: 20px;
   /*padding: 20px;*/
 }
 .main-side {
   text-align: center;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 .main-side h3 {
-  margin-top: 50px;
+  margin-top: 30px;
   padding-top: 30px;
 }
 .main-side p {
   padding: 30px;
+  padding-top: 10px;
 }
 .main-login {
-  background-color: #0C6E77;
+  background-color: #3B3632;
+  border: 1px solid #524B45;
   border-radius: 15px;
   margin-right: 15px;
   padding: 20px;
@@ -88,10 +100,13 @@ select {
   padding-right: 100px;
 }
 .lobby-join {
-  background-color: #DAA638;
+  background-color: #e5680a;
+  border: 1px solid #ffb222;
   border-radius: 10px;
-  margin-left: 200px;
-  margin-right: 200px;
+  margin-left: 150px;
+  margin-right: 150px;
+  margin-top: 40px;
+  margin-bottom: 40px;
   padding: 10px;
   color: white;
 }
@@ -109,7 +124,8 @@ select {
   border-radius: 5px;
 }
 .chat-div {
-  background-color: #0C6E77;
+  background-color: #3B3632;
+  border: 1px solid #524B45;
   text-align: center;
   border-radius: 15px;
   padding: 20px;
@@ -117,7 +133,8 @@ select {
   margin-right: 20px;
 }
 .div-currentusers {
-  background-color: #0C6E77;
+  background-color: #3B3632;
+  border: 1px solid #524B45;
   text-align: center;
   border-radius: 15px;
   padding: 20px;
@@ -187,6 +204,7 @@ select {
     padding: 3px;
     background-image: url('../images/clang_floor2.png');
     background-color: #3B3632;
+    border: 1px solid #524B45;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
