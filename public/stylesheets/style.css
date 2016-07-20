@@ -148,6 +148,11 @@ select {
 .logo-cont {
   text-align: center;
 }
+#waiting {
+  text-align: center;
+  padding-top: 10px;
+  font-size: 26px;
+}
 
 
 

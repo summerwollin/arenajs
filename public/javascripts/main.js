@@ -866,7 +866,8 @@ function main(
   hostService,
   opponentLives,
   myHealth,
-  startingDiv
+  startingDiv,
+  waitingDiv
 ) {
     if (isHost) {
 
@@ -891,16 +892,18 @@ function main(
 
       hostService.onAllPeersConnected(function() {
         console.log('arenajs [onAllPeersConnected]');
+        waitingDiv.style.display = 'none';
         allPeersConnected = true;
         hostService.sendBroadcastMessage({type: 'overall-allClear'});
-        console.log('Ready...Set...play!');
-        startingDiv.style.display = 'block';
-        console.log('after style = block');
-        setTimeout(removeStartingDiv(), 20000);
-        function removeStartingDiv() {
-          console.log('~~~REMOVE_STARTING_DIV~~~');
-          startingDiv.style.display = 'none';
-        }
+        // console.log('Ready...Set...play!');
+        // startingDiv.style.display = 'block';
+        // console.log('after style = block');
+        //
+        // setTimeout(removeStartingDiv(), 20000);
+        // function removeStartingDiv() {
+        //   console.log('~~~REMOVE_STARTING_DIV~~~');
+        //   startingDiv.style.display = 'none';
+        // }
       })
 
       hostService.onDataReceived(function(peer, msg) {
@@ -920,6 +923,7 @@ function main(
       //this.moveToState(new WelcomeState(this));
 
     } else {
+      waitingDiv.style.display = 'none';
       let game = this;
       peerService.onDataReceived(function (msg) {
         if(msg.type === "p-state") {

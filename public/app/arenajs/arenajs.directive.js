@@ -27,6 +27,8 @@
     var opponentLives = document.getElementById('opponentLives');
     var myHealth = document.getElementById('myHealth');
     var startingDiv = document.getElementById('starting');
+    var waitingDiv = document.getElementById('waiting');
+
 
     main(
       viewportFrame,
@@ -46,7 +48,8 @@
       scope.hostService,
       opponentLives,
       myHealth,
-      startingDiv
+      startingDiv,
+      waitingDiv
     )
 
   }
