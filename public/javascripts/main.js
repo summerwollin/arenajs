@@ -399,11 +399,11 @@ function getViewMatrix(out, pose, eye) {
 function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myHealth) {
 
 
-    if(playerIsHost) {
-      if (allPeersConnected) {
-        // playerLives.innerHTML = gameState.players[0].lives;
-        // opponentLives.innerHTML = gameState.players[1].lives;
-        // myHealth.innerHTML = gameState.players[0].health;
+    if(allPeersConnected) {
+      if (playerIsHost) {
+        playerLives.innerHTML = gameState.players[0].lives;
+        opponentLives.innerHTML = gameState.players[1].lives;
+        myHealth.innerHTML = gameState.players[0].health;
 
         hostService.sendBroadcastMessage({
           type: "p-state",
@@ -412,11 +412,10 @@ function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myH
           bullets: gameState.bullets,
           players: gameState.players
         })
-      }
-    } else {
-      // playerLives.innerHTML = gameState.players[1].lives;
-      // opponentLives.innerHTML = gameState.players[0].lives;
-      // myHealth.innerHTML = gameState.players[1].health;
+      } else {
+      playerLives.innerHTML = gameState.players[1].lives;
+      opponentLives.innerHTML = gameState.players[0].lives;
+      myHealth.innerHTML = gameState.players[1].health;
 
       peerService.sendToHost({
         type: "p-peerPosition",
@@ -424,6 +423,7 @@ function drawFrame(gl, playerLives, hostService, peerService, opponentLives, myH
         zAngle: zAngle
       })
     }
+  }
 
     // Clear back buffer but not color buffer (we expect the entire scene to be overwritten)
     gl.depthMask(true);
