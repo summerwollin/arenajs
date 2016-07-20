@@ -1,4 +1,10 @@
 /*
+ * This code has been modified for multiplayer gameplay.
+ * All code relating to game state, host, peer, game objects
+ * other than map assets have been added by Summer Wollin.
+ */
+
+/*
  * main.js - Setup for Quake 3 WebGL demo
  */
 
@@ -24,6 +30,12 @@
  *    3. This notice may not be removed or altered from any source
  *    distribution.
  */
+
+ /*
+  * This code has been modified for multiplayer gameplay.
+  * All code relating to game state, host, peer, game objects
+  * other than map assets have been added by Summer Wollin
+  */
 
 // The bits that need to change to load different maps are right here!
 // ===========================================
